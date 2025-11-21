@@ -12,5 +12,53 @@
     <p>Debug Placeholder: 6:55pm</p>
 
     <p> Data Sources: </p>
+<body>
+    <div id="map-container">
+        <div class="loading">Loading map data...</div>
+        <svg id="map"></svg>
+        <button id="reset-btn">← Back to US Map</button>
+        
+        <div class="legend">
+            <div class="legend-title">Vaccination Rate (%)</div>
+            <div class="legend-scale" id="legend-gradient"></div>
+            <div class="legend-labels">
+                <span>0%</span>
+                <span>50%</span>
+                <span>100%</span>
+            </div>
+        </div>
+        
+        <div class="tooltip" id="tooltip"></div>
+    </div>
+    
+    <div id="info-panel">
+        <h2>COVID-19 Vaccination Explorer</h2>
+        <p class="intro-text">
+            Explore county-level COVID-19 vaccination rates across the United States. 
+            Click on any state to view detailed county data.
+        </p>
+        
+        <div class="controls">
+            <div class="control-group">
+            <label for="year-select">Select Year:</label>
+            <select id="year-select">
+            </select>
+        </div>
+       
+            
+            <div class="control-group">
+                <label for="metric-select">Vaccination Metric:</label>
+                <select id="metric-select">
+                    <option value="rate">Fully Vaccinated</option>
+                    <option value="dose1_rate">First Dose</option>
+                    <option value="booster_rate">Booster Dose</option>
+                </select>
+            </div>
+        </div>
+        
+        <div id="county-details-container"></div>
+    </div>
+    
+    <script src="main.js"></script>
 </body>
 </html>
