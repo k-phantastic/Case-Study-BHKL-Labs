@@ -1,9 +1,15 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import * as topojson from "https://cdn.jsdelivr.net/npm/topojson-client@3/+esm";
 
-// Configuration
-const width = 960;
-const height = 600;
+// Derive dimensions from the rendered SVG so the map fills its container.
+const svg = d3.select("#map");
+const { width: initialWidth, height: initialHeight } = svg.node().getBoundingClientRect();
+const width = initialWidth || 960;
+const height = initialHeight || 600;
+
+svg
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .attr("preserveAspectRatio", "xMidYMid meet");
 
 // State variables (simplified)
 let currentState = null;
@@ -14,14 +20,12 @@ let countyNames = {};
 let selectedYear = null;
 let availableYears = [];
 
-// Create SVG
-const svg = d3.select("#map");
 const g = svg.append("g");
 
 // Projection
 const projection = d3.geoAlbersUsa()
     .translate([width / 2, height / 2])
-    .scale(1000);
+    .scale(Math.min(width, height) * 1.3);
 
 const path = d3.geoPath().projection(projection);
 
