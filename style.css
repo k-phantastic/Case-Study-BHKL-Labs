@@ -29,6 +29,35 @@ header {
     border-bottom: 1px solid #e0e0e0;
 }
 
+/* New Nav Styles */
+#main-nav {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+#main-nav a {
+    text-decoration: none;
+    color: #555;
+    font-weight: 600;
+    padding: 8px 20px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+#main-nav a:hover {
+    background-color: #f0f0f0;
+    color: #2196F3;
+}
+
+#main-nav a.active {
+    background-color: #2196F3;
+    color: white;
+    box-shadow: 0 2px 5px rgba(33, 150, 243, 0.3);
+}
+
 #layout {
     display: flex;
     flex-direction: row;
@@ -286,6 +315,7 @@ h2 {
 .year-label {
     font-weight: 600;
     color: #555;
+    border-radius: 4px;
 }
 
 .year-value {
@@ -309,4 +339,9 @@ h2 {
     border-radius: 6px;
     margin-top: 20px;
     font-size: 14px;
+}
+
+li a {
+    text-decoration: none;
+    color: inherit;
 }
