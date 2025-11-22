@@ -1,3 +1,6 @@
+import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+import * as topojson from "https://cdn.jsdelivr.net/npm/topojson-client@3/+esm";
+
 // Configuration
 const width = 960;
 const height = 600;
@@ -43,7 +46,7 @@ const tooltip = d3.select("#tooltip");
 // Event listeners
 d3.select("#reset-btn").on("click", resetMap);
 
-d3.select("#year-select").on("change", function() {
+d3.select("#year-select").on("change", function () {
     selectedYear = this.value;
     if (currentState) {
         updateCountyColors();
@@ -52,33 +55,40 @@ d3.select("#year-select").on("change", function() {
 });
 
 // Load all data
+Promise.all([
+    d3.json("./data/states-10m.json"),
+    d3.json("./data/counties-10m.json")
+])
+    .then(([states, counties]) => {
+        statesData = topojson.feature(states, states.objects.states);
+        countiesData = topojson.feature(counties, counties.objects.counties);
 
-    
-    // Set available years
-    availableYears = summary.years_available;
-    selectedYear = availableYears[availableYears.length - 1].toString(); // Most recent year
-    
-    // Populate year selector
-    const yearSelect = d3.select("#year-select");
-    yearSelect.selectAll("option")
-        .data(availableYears)
-        .enter()
-        .append("option")
-        .attr("value", d => d)
-        .text(d => d)
-        .property("selected", d => d.toString() === selectedYear);
-    
-    // Hide loading message
-    d3.select(".loading").style("display", "none");
-    
-    // Draw initial map
-    drawStates();
-    
-}).catch(error => {
-    console.error("Error loading data:", error);
-    d3.select(".loading")
-        .html(`<div class="error-message">Error loading data. Please ensure all data files are in the same directory.</div>`);
-});
+        console.log("TopoJSON loaded:", statesData, countiesData);
+
+        drawStates();
+    })
+    .catch(err => console.error("Failed to load map files", err));
+
+// Set available years
+availableYears = summary.years_available;
+selectedYear = availableYears[availableYears.length - 1].toString(); // Most recent year
+
+// Populate year selector
+const yearSelect = d3.select("#year-select");
+yearSelect.selectAll("option")
+    .data(availableYears)
+    .enter()
+    .append("option")
+    .attr("value", d => d)
+    .text(d => d)
+    .property("selected", d => d.toString() === selectedYear);
+
+// Hide loading message
+d3.select(".loading").style("display", "none");
+
+// Draw initial map
+drawStates();
+
 
 // Draw US states
 function drawStates() {
@@ -99,7 +109,7 @@ function drawStates() {
 function handleStateClick(event, d) {
     event.stopPropagation();
     currentState = d;
-    
+
     // Calculate zoom parameters
     const bounds = path.bounds(d);
     const dx = bounds[1][0] - bounds[0][0];
@@ -108,22 +118,22 @@ function handleStateClick(event, d) {
     const y = (bounds[0][1] + bounds[1][1]) / 2;
     const scale = Math.max(1, Math.min(8, 0.9 / Math.max(dx / width, dy / height)));
     const translate = [width / 2 - scale * x, height / 2 - scale * y];
-    
+
     // Smooth transition: hide states
     g.selectAll(".state")
         .transition()
         .duration(750)
         .style("opacity", 0)
-        .on("end", function() {
+        .on("end", function () {
             d3.select(this).style("display", "none");
         });
-    
+
     // Filter counties for this state
     const stateFIPS = d.id;
-    const stateCounties = countiesData.features.filter(county => 
+    const stateCounties = countiesData.features.filter(county =>
         Math.floor(county.id / 1000) === stateFIPS
     );
-    
+
     // Draw counties with smooth entrance
     g.selectAll(".county")
         .data(stateCounties)
@@ -141,12 +151,12 @@ function handleStateClick(event, d) {
         .duration(500)
         .delay(750)
         .style("opacity", 1);
-    
+
     // Zoom transition
     g.transition()
         .duration(750)
         .attr("transform", `translate(${translate}) scale(${scale})`);
-    
+
     // Show reset button
     d3.select("#reset-btn")
         .style("display", "block")
@@ -155,7 +165,7 @@ function handleStateClick(event, d) {
         .duration(300)
         .delay(750)
         .style("opacity", 1);
-    
+
     // Update info panel
     updateInfoPanel();
 }
@@ -163,13 +173,13 @@ function handleStateClick(event, d) {
 // Handle county click - show details
 function handleCountyClick(event, d) {
     event.stopPropagation();
-    
+
     // Remove previous selection
     g.selectAll(".county").classed("selected", false);
-    
+
     // Highlight selected county
     d3.select(event.currentTarget).classed("selected", true);
-    
+
     // Display county details
     displayCountyDetails(d);
 }
@@ -205,9 +215,9 @@ function getStateName(id) {
 // Update info panel when state is selected
 function updateInfoPanel() {
     if (!currentState) return;
-    
+
     const stateName = getStateName(currentState.id);
-    
+
     const html = `
         <div class="county-details">
             <h3>${stateName}</h3>
@@ -217,21 +227,21 @@ function updateInfoPanel() {
             </p>
         </div>
     `;
-    
+
     d3.select("#county-details-container").html(html);
 }
 
 // Reset to full US map
 function resetMap() {
     currentState = null;
-    
+
     // Remove counties with smooth fade
     g.selectAll(".county")
         .transition()
         .duration(500)
         .style("opacity", 0)
         .remove();
-    
+
     // Show states
     g.selectAll(".state")
         .style("display", "block")
@@ -239,21 +249,21 @@ function resetMap() {
         .duration(500)
         .delay(500)
         .style("opacity", 1);
-    
+
     // Reset zoom
     g.transition()
         .duration(750)
         .attr("transform", "");
-    
+
     // Hide reset button
     d3.select("#reset-btn")
         .transition()
         .duration(300)
         .style("opacity", 0)
-        .on("end", function() {
+        .on("end", function () {
             d3.select(this).style("display", "none");
         });
-    
+
     // Reset info panel
     d3.select("#county-details-container").html("");
 }
@@ -279,22 +289,22 @@ function hideTooltip() {
 // Get vaccination value for specific county, year (simplified for single metric)
 function getVaccinationValue(fips, year) {
     const key = `${fips}_${year}`;
-    
+
     if (vaccinationData[key] && vaccinationData[key].rate !== undefined) {
         return vaccinationData[key].rate;
     }
-    
+
     return null;
 }
 
 // Get completeness percentage
 function getCompletenessValue(fips, year) {
     const key = `${fips}_${year}`;
-    
+
     if (vaccinationData[key] && vaccinationData[key].completeness !== undefined) {
         return vaccinationData[key].completeness;
     }
-    
+
     return null;
 }
 
@@ -302,11 +312,11 @@ function getCompletenessValue(fips, year) {
 function getCountyColor(county) {
     const fips = county.id;
     const value = getVaccinationValue(fips, selectedYear);
-    
+
     if (value === null || value === 0) {
         return "#e0e0e0"; // Gray for missing data
     }
-    
+
     return colorScale(value);
 }
 
@@ -324,7 +334,7 @@ function displayCountyDetails(county) {
     const countyName = getCountyName(fips);
     const currentValue = getVaccinationValue(fips, selectedYear);
     const completeness = getCompletenessValue(fips, selectedYear);
-    
+
     let html = `
         <div class="county-details">
             <h3>${countyName}</h3>
@@ -335,11 +345,11 @@ function displayCountyDetails(county) {
                 ${completeness !== null ? `<div class="metric-subtext">Data completeness: ${completeness.toFixed(1)}%</div>` : ''}
             </div>
     `;
-    
+
     // Show all years
     if (availableYears.length > 1) {
         html += `<div class="year-comparison"><h4>Historical Vaccination Rates</h4>`;
-        
+
         availableYears.forEach(year => {
             const value = getVaccinationValue(fips, year.toString());
             html += `
@@ -349,12 +359,12 @@ function displayCountyDetails(county) {
                 </div>
             `;
         });
-        
+
         html += `</div>`;
     }
-    
+
     html += `</div>`;
-    
+
     d3.select("#county-details-container").html(html);
 }
 
@@ -362,7 +372,7 @@ function displayCountyDetails(county) {
 function showCountyTooltip(event, d) {
     const name = getCountyName(d.id);
     const value = getVaccinationValue(d.id, selectedYear);
-    
+
     tooltip
         .style("display", "block")
         .html(`
