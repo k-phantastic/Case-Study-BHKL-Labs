@@ -196,6 +196,33 @@ h2 {
     box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
 }
 
+#county-details-container {
+    margin-top: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.state-details {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid #4CAF50;
+    margin-bottom: 15px;
+}
+
+.state-details h3 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 20px;
+    border-bottom: 2px solid #4CAF50;
+    padding-bottom: 8px;
+}
+
+.state-details .intro-text {
+    color: #666;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
 .county-details {
     background: #f8f9fa;
     padding: 20px;
@@ -210,6 +237,7 @@ h2 {
     border-bottom: 2px solid #2196F3;
     padding-bottom: 10px;
 }
+
 
 .metric {
     margin-bottom: 15px;
