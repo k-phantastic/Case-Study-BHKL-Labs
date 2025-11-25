@@ -80,7 +80,7 @@ import * as topojson from "https://cdn.jsdelivr.net/npm/topojson-client@3/+esm";
 //     .catch(err => console.error("Failed to load map files", err));
 
 // // Set available years
-// availableYears = summary.years_available;
+// availableYears = summary.years_available; // This line needs attention, maybe AI generated..?
 // selectedYear = availableYears[availableYears.length - 1].toString(); // Most recent year
 
 // // Populate year selector
