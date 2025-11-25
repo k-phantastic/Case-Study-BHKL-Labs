@@ -345,3 +345,122 @@ li a {
     text-decoration: none;
     color: inherit;
 }
+
+/* Scrollytelling Styles */
+body {
+    scroll-snap-type: y mandatory; 
+    scroll-behavior: smooth;
+}
+
+.step {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 2rem;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
+
+.slide-content {
+    text-align: center;
+    color: white;
+    max-width: 1200px;
+}
+
+/* Slide backgrounds */
+.step[data-step="0"] {
+    background: linear-gradient(135deg, #136eff 0%, #999999 100%);
+}
+
+.step[data-step="1"] {
+    background: linear-gradient(135deg, #136eff 0%, #999999 100%);
+}
+
+.step[data-step="2"] {
+    background: linear-gradient(135deg, #136eff 0%, #999999 100%);
+}
+
+.step[data-step="3"] {
+    background: linear-gradient(135deg, #136eff 0%, #999999 100%);
+}
+
+.step[data-step="4"] {
+    background: linear-gradient(135deg, #136eff 0%, #999999 100%);
+}
+
+/* Title slide */
+.main-title {
+    font-size: 4rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.scroll-indicator {
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+  }
+}
+
+/* Content slides */
+.slide-title {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+.slide-text {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.chart-container {
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    padding: 2rem;
+    display: inline-block;
+}
+
+/* Progress indicator */
+.progress-indicator {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 100;
+}
+
+.progress-dot {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.progress-dot.active {
+    background: white;
+    transform: scale(1.25);
+}
+
+.progress-dot:hover {
+    background: rgba(255, 255, 255, 0.6);
+}
+
