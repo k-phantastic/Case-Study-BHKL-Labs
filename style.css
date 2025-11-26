@@ -86,6 +86,13 @@ header {
     height: 100%;
 }
 
+#map-section {
+    min-height: 100vh;
+    position: relative;
+    background: white;
+}
+
+
 .state {
     stroke: #ffffff;
     stroke-width: 1.5px;
@@ -348,7 +355,7 @@ li a {
 
 /* Scrollytelling Styles */
 body {
-    scroll-snap-type: y mandatory; 
+    /* scroll-snap-type: y mandatory; */
     scroll-behavior: smooth;
 }
 
@@ -407,12 +414,15 @@ body {
 }
 
 @keyframes bounce {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: translateY(0);
     }
+
     50% {
         transform: translateY(-20px);
-  }
+    }
 }
 
 /* Content slides */
@@ -463,4 +473,3 @@ body {
 .progress-dot:hover {
     background: rgba(255, 255, 255, 0.6);
 }
-
