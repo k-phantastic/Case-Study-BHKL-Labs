@@ -9,8 +9,8 @@ export async function initPoliticalAnalysis(containerId) {
     container.selectAll('*').remove();
     
     // Layout configuration
-    const width = 1000;
-    const height = 600;
+    const width = 800;
+    const height = 400;
     const margin = { top: 60, right: 120, bottom: 60, left: 80 };
     
     // Create main visualization container
@@ -24,7 +24,7 @@ export async function initPoliticalAnalysis(containerId) {
     // Summary Statistics
     const summaryDiv = vizContainer.append('div')
         .attr('class', 'summary-stats')
-        .style('margin-bottom', '30px')
+        .style('margin-bottom', '20px')
         .style('display', 'flex')
         .style('justify-content', 'space-around')
         .style('gap', '20px');
@@ -39,9 +39,9 @@ export async function initPoliticalAnalysis(containerId) {
         .style('border-radius', '10px')
         .style('text-align', 'center')
         .html(`
-            <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">BLUE STATES</div>
-            <div style="font-size: 48px; font-weight: bold;">${data.summary_stats.blue_states_avg}%</div>
-            <div style="font-size: 12px; opacity: 0.8; margin-top: 8px;">Average Vaccination Rate</div>
+            <div style="font-size: 12px; opacity: 0.9; margin-bottom: 8px;">BLUE STATES</div>
+            <div style="font-size: 36px; font-weight: bold;">${data.summary_stats.blue_states_avg}%</div>
+            <div style="font-size: 10px; opacity: 0.8; margin-top: 8px;">Average Vaccination Rate</div>
         `);
     
     // Red states stat card
@@ -50,13 +50,13 @@ export async function initPoliticalAnalysis(containerId) {
         .style('flex', '1')
         .style('background', 'linear-gradient(135deg, #f44336 0%, #c62828 100%)')
         .style('color', 'white')
-        .style('padding', '25px')
+        .style('padding', '15px')
         .style('border-radius', '10px')
         .style('text-align', 'center')
         .html(`
-            <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">RED STATES</div>
-            <div style="font-size: 48px; font-weight: bold;">${data.summary_stats.red_states_avg}%</div>
-            <div style="font-size: 12px; opacity: 0.8; margin-top: 8px;">Average Vaccination Rate</div>
+            <div style="font-size: 12px; opacity: 0.9; margin-bottom: 8px;">RED STATES</div>
+            <div style="font-size: 36px; font-weight: bold;">${data.summary_stats.red_states_avg}%</div>
+            <div style="font-size: 10px; opacity: 0.8; margin-top: 8px;">Average Vaccination Rate</div>
         `);
     
     // Gap stat card
@@ -69,9 +69,9 @@ export async function initPoliticalAnalysis(containerId) {
         .style('border-radius', '10px')
         .style('text-align', 'center')
         .html(`
-            <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">PARTISAN GAP</div>
-            <div style="font-size: 48px; font-weight: bold;">${data.summary_stats.gap.toFixed(1)}%</div>
-            <div style="font-size: 12px; opacity: 0.8; margin-top: 8px;">Percentage Point Difference</div>
+            <div style="font-size: 12px; opacity: 0.9; margin-bottom: 8px;">PARTISAN GAP</div>
+            <div style="font-size: 36px; font-weight: bold;">${data.summary_stats.gap.toFixed(1)}%</div>
+            <div style="font-size: 10px; opacity: 0.8; margin-top: 8px;">Percentage Point Difference</div>
         `);
     
     // Time Series Chart
