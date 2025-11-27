@@ -359,6 +359,7 @@ li a {
 body, html {
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
 section {
@@ -374,15 +375,20 @@ section {
     padding: 2rem;
     scroll-snap-align: start;
     scroll-snap-stop: always;
-    opacity: 0;
+    opacity: 0 !important;
+    visibility: hidden !important;
     pointer-events: none;
-    transition: opacity 0.5s ease;
+    transition: all 0.3s ease;
 }
 
 .slide-content {
     text-align: center;
     color: white;
     max-width: 1200px;
+    width: 100%;
+    overflow-y: auto;
+    max-height: 90vh;
+    padding: 1rem;
 }
 
 /* Slide backgrounds */
@@ -450,8 +456,13 @@ section {
     background: white;
     border-radius: 0.5rem;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    padding: 2rem;
-    display: inline-block;
+    padding: 1rem;
+    display: block;
+    width: 100%;
+    max-width: 750px;
+    margin: 0 auto;
+    overflow-y: auto;
+    max-height: 80vh;
 }
 
 /* Bar Race Plot (Slide 2) */
@@ -540,13 +551,14 @@ section {
 }
 
 .step.active {
-    opacity: 1;
+    opacity: 1 !important;
+    visibility: visible !important;
     pointer-events: all;
+    z-index: 10;
 }
-
-
 .political-viz-container {
     max-width: 700px !important;
+    width: 100% !important;
     margin: 0 auto !important;
     padding: 15px !important;
     overflow: visible !important;
@@ -555,16 +567,34 @@ section {
 .political-viz-container svg {
     max-width: 100%;
     height: auto;
+    display: block;
 }
 
-.chart-container {
-    background: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    padding: 1.5rem !important;  
-    display: inline-block;
-    max-width: 95%;  
-    overflow-y: auto; 
-    max-height: 85vh;  
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
