@@ -9,25 +9,25 @@ export async function initPoliticalAnalysis(containerId) {
     container.selectAll('*').remove();
     
     // Layout configuration
-    const width = 800;
-    const height = 400;
-    const margin = { top: 60, right: 120, bottom: 60, left: 80 };
+    const width = 650;
+    const height = 250;  
+    const margin = { top: 40, right: 80, bottom: 50, left: 60 };
     
     // Create main visualization container
     const vizContainer = container.append('div')
         .attr('class', 'political-viz-container')
         .style('background', 'white')
         .style('border-radius', '12px')
-        .style('padding', '30px')
+        .style('padding', '20px')
         .style('box-shadow', '0 4px 20px rgba(0,0,0,0.1)');
     
     // Summary Statistics
     const summaryDiv = vizContainer.append('div')
         .attr('class', 'summary-stats')
-        .style('margin-bottom', '20px')
+        .style('margin-bottom', '15px')
         .style('display', 'flex')
         .style('justify-content', 'space-around')
-        .style('gap', '20px');
+        .style('gap', '15px');
     
     // Blue states stat card
     summaryDiv.append('div')
@@ -35,13 +35,13 @@ export async function initPoliticalAnalysis(containerId) {
         .style('flex', '1')
         .style('background', 'linear-gradient(135deg, #2196F3 0%, #1976D2 100%)')
         .style('color', 'white')
-        .style('padding', '25px')
-        .style('border-radius', '10px')
+        .style('padding', '15px')
+        .style('border-radius', '8px')
         .style('text-align', 'center')
         .html(`
-            <div style="font-size: 12px; opacity: 0.9; margin-bottom: 8px;">BLUE STATES</div>
-            <div style="font-size: 36px; font-weight: bold;">${data.summary_stats.blue_states_avg}%</div>
-            <div style="font-size: 10px; opacity: 0.8; margin-top: 8px;">Average Vaccination Rate</div>
+            <div style="font-size: 11px; opacity: 0.9; margin-bottom: 5px;">BLUE STATES</div>
+            <div style="font-size: 32px; font-weight: bold;">${data.summary_stats.blue_states_avg}%</div>
+            <div style="font-size: 10px; opacity: 0.8; margin-top: 5px;">Average Vaccination Rate</div>
         `);
     
     // Red states stat card
@@ -51,12 +51,12 @@ export async function initPoliticalAnalysis(containerId) {
         .style('background', 'linear-gradient(135deg, #f44336 0%, #c62828 100%)')
         .style('color', 'white')
         .style('padding', '15px')
-        .style('border-radius', '10px')
+        .style('border-radius', '8px')
         .style('text-align', 'center')
         .html(`
-            <div style="font-size: 12px; opacity: 0.9; margin-bottom: 8px;">RED STATES</div>
-            <div style="font-size: 36px; font-weight: bold;">${data.summary_stats.red_states_avg}%</div>
-            <div style="font-size: 10px; opacity: 0.8; margin-top: 8px;">Average Vaccination Rate</div>
+            <div style="font-size: 11px; opacity: 0.9; margin-bottom: 5px;">RED STATES</div>
+            <div style="font-size: 32px; font-weight: bold;">${data.summary_stats.red_states_avg}%</div>
+            <div style="font-size: 10px; opacity: 0.8; margin-top: 5px;">Average Vaccination Rate</div>
         `);
     
     // Gap stat card
@@ -65,35 +65,37 @@ export async function initPoliticalAnalysis(containerId) {
         .style('flex', '1')
         .style('background', 'linear-gradient(135deg, #9E9E9E 0%, #616161 100%)')
         .style('color', 'white')
-        .style('padding', '25px')
-        .style('border-radius', '10px')
+        .style('padding', '15px')
+        .style('border-radius', '8px')
         .style('text-align', 'center')
         .html(`
-            <div style="font-size: 12px; opacity: 0.9; margin-bottom: 8px;">PARTISAN GAP</div>
-            <div style="font-size: 36px; font-weight: bold;">${data.summary_stats.gap.toFixed(1)}%</div>
-            <div style="font-size: 10px; opacity: 0.8; margin-top: 8px;">Percentage Point Difference</div>
+            <div style="font-size: 11px; opacity: 0.9; margin-bottom: 5px;">PARTISAN GAP</div>
+            <div style="font-size: 32px; font-weight: bold;">${data.summary_stats.gap.toFixed(1)}%</div>
+            <div style="font-size: 10px; opacity: 0.8; margin-top: 5px;">Percentage Point Difference</div>
         `);
+    
+    // Calculate chart dimensions ONCE
+    const chartWidth = width - margin.left - margin.right;
+    const chartHeight = height - margin.top - margin.bottom;
     
     // Time Series Chart
     const timeSeriesDiv = vizContainer.append('div')
         .attr('class', 'time-series-chart')
-        .style('margin-bottom', '40px');
+        .style('margin-bottom', '20px');
     
     timeSeriesDiv.append('h3')
         .style('text-align', 'center')
-        .style('margin-bottom', '20px')
+        .style('margin-bottom', '15px')
         .style('color', '#333')
+        .style('font-size', '16px')
         .text('Vaccination Rates Over Time: Red vs Blue States');
     
     const timeSeriesSvg = timeSeriesDiv.append('svg')
         .attr('width', width)
-        .attr('height', 350);
+        .attr('height', height);
     
     const timeSeriesG = timeSeriesSvg.append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
-    
-    const chartWidth = width - margin.left - margin.right;
-    const chartHeight = 350 - margin.top - margin.bottom;
     
     const xScale = d3.scaleLinear()
         .domain(d3.extent(data.time_series, d => d.year))
@@ -123,18 +125,18 @@ export async function initPoliticalAnalysis(containerId) {
     timeSeriesG.append('g')
         .attr('transform', `translate(0,${chartHeight})`)
         .call(d3.axisBottom(xScale).tickFormat(d3.format('d')))
-        .style('font-size', '12px');
+        .style('font-size', '11px');
     
     timeSeriesG.append('g')
         .call(d3.axisLeft(yScale).tickFormat(d => d + '%'))
-        .style('font-size', '12px');
+        .style('font-size', '11px');
     
     timeSeriesG.append('text')
         .attr('transform', 'rotate(-90)')
-        .attr('y', -60)
+        .attr('y', -45)
         .attr('x', -chartHeight / 2)
         .attr('text-anchor', 'middle')
-        .style('font-size', '14px')
+        .style('font-size', '12px')
         .style('fill', '#666')
         .text('Vaccination Rate (%)');
     
@@ -142,14 +144,14 @@ export async function initPoliticalAnalysis(containerId) {
         .datum(data.time_series)
         .attr('fill', 'none')
         .attr('stroke', '#f44336')
-        .attr('stroke-width', 3)
+        .attr('stroke-width', 2.5)
         .attr('d', redLine);
     
     timeSeriesG.append('path')
         .datum(data.time_series)
         .attr('fill', 'none')
         .attr('stroke', '#2196F3')
-        .attr('stroke-width', 3)
+        .attr('stroke-width', 2.5)
         .attr('d', blueLine);
     
     timeSeriesG.selectAll('.red-circle')
@@ -158,10 +160,10 @@ export async function initPoliticalAnalysis(containerId) {
         .attr('class', 'red-circle')
         .attr('cx', d => xScale(d.year))
         .attr('cy', d => yScale(d.red_states_avg))
-        .attr('r', 5)
+        .attr('r', 4)
         .attr('fill', '#f44336')
         .attr('stroke', 'white')
-        .attr('stroke-width', 2);
+        .attr('stroke-width', 1.5);
     
     timeSeriesG.selectAll('.blue-circle')
         .data(data.time_series.filter(d => d.blue_states_avg !== null))
@@ -169,50 +171,51 @@ export async function initPoliticalAnalysis(containerId) {
         .attr('class', 'blue-circle')
         .attr('cx', d => xScale(d.year))
         .attr('cy', d => yScale(d.blue_states_avg))
-        .attr('r', 5)
+        .attr('r', 4)
         .attr('fill', '#2196F3')
         .attr('stroke', 'white')
-        .attr('stroke-width', 2);
+        .attr('stroke-width', 1.5);
     
     const legend = timeSeriesG.append('g')
-        .attr('transform', `translate(${chartWidth - 150}, 20)`);
+        .attr('transform', `translate(${chartWidth - 120}, 10)`);
     
     legend.append('line')
-        .attr('x1', 0).attr('x2', 40)
+        .attr('x1', 0).attr('x2', 30)
         .attr('y1', 0).attr('y2', 0)
         .attr('stroke', '#f44336')
-        .attr('stroke-width', 3);
+        .attr('stroke-width', 2.5);
     
     legend.append('text')
-        .attr('x', 50).attr('y', 5)
-        .style('font-size', '14px')
+        .attr('x', 35).attr('y', 4)
+        .style('font-size', '12px')
         .text('Red States');
     
     legend.append('line')
-        .attr('x1', 0).attr('x2', 40)
-        .attr('y1', 30).attr('y2', 30)
+        .attr('x1', 0).attr('x2', 30)
+        .attr('y1', 20).attr('y2', 20)
         .attr('stroke', '#2196F3')
-        .attr('stroke-width', 3);
+        .attr('stroke-width', 2.5);
     
     legend.append('text')
-        .attr('x', 50).attr('y', 35)
-        .style('font-size', '14px')
+        .attr('x', 35).attr('y', 24)
+        .style('font-size', '12px')
         .text('Blue States');
     
     // Urban/Rural Breakdown
     const urbanRuralDiv = vizContainer.append('div')
         .attr('class', 'urban-rural-chart')
-        .style('margin-bottom', '40px');
+        .style('margin-bottom', '20px');
     
     urbanRuralDiv.append('h3')
         .style('text-align', 'center')
-        .style('margin-bottom', '20px')
+        .style('margin-bottom', '15px')
         .style('color', '#333')
+        .style('font-size', '16px')
         .text('Urban vs Rural: Vaccination Rates by Political Lean');
     
     const urbanRuralSvg = urbanRuralDiv.append('svg')
         .attr('width', width)
-        .attr('height', 350);
+        .attr('height', height);
     
     const urbanRuralG = urbanRuralSvg.append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
@@ -241,18 +244,18 @@ export async function initPoliticalAnalysis(containerId) {
     urbanRuralG.append('g')
         .attr('transform', `translate(0,${chartHeight})`)
         .call(d3.axisBottom(xUrbanScale))
-        .style('font-size', '12px');
+        .style('font-size', '11px');
     
     urbanRuralG.append('g')
         .call(d3.axisLeft(yUrbanScale).tickFormat(d => d + '%'))
-        .style('font-size', '12px');
+        .style('font-size', '11px');
     
     urbanRuralG.append('text')
         .attr('transform', 'rotate(-90)')
-        .attr('y', -60)
+        .attr('y', -45)
         .attr('x', -chartHeight / 2)
         .attr('text-anchor', 'middle')
-        .style('font-size', '14px')
+        .style('font-size', '12px')
         .style('fill', '#666')
         .text('Vaccination Rate (%)');
     
@@ -280,9 +283,9 @@ export async function initPoliticalAnalysis(containerId) {
                     .style('position', 'absolute')
                     .style('background', 'rgba(0,0,0,0.8)')
                     .style('color', 'white')
-                    .style('padding', '10px')
-                    .style('border-radius', '5px')
-                    .style('font-size', '12px')
+                    .style('padding', '8px')
+                    .style('border-radius', '4px')
+                    .style('font-size', '11px')
                     .style('pointer-events', 'none')
                     .style('left', (event.pageX + 10) + 'px')
                     .style('top', (event.pageY - 20) + 'px')
@@ -304,7 +307,7 @@ export async function initPoliticalAnalysis(containerId) {
             .attr('x', d => xUrbanScale(urbanClass) + xSubScale(d.political_lean) + xSubScale.bandwidth() / 2)
             .attr('y', d => yUrbanScale(d.avg_vax_rate) - 5)
             .attr('text-anchor', 'middle')
-            .style('font-size', '11px')
+            .style('font-size', '10px')
             .style('font-weight', 'bold')
             .style('fill', '#333')
             .text(d => `${d.avg_vax_rate}%`);
@@ -316,18 +319,18 @@ export async function initPoliticalAnalysis(containerId) {
     
     scatterDiv.append('h3')
         .style('text-align', 'center')
-        .style('margin-bottom', '20px')
+        .style('margin-bottom', '15px')
         .style('color', '#333')
+        .style('font-size', '16px')
         .text('Political Margin vs Vaccination Rate (Latest Year)');
     
     const scatterSvg = scatterDiv.append('svg')
         .attr('width', width)
-        .attr('height', 400);
+        .attr('height', height);
     
     const scatterG = scatterSvg.append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
     
-    const scatterHeight = 400 - margin.top - margin.bottom;
     const statesWithData = data.states.filter(d => d.vax_rate !== null);
     
     const xScatterScale = d3.scaleLinear()
@@ -336,7 +339,7 @@ export async function initPoliticalAnalysis(containerId) {
     
     const yScatterScale = d3.scaleLinear()
         .domain([0, 100])
-        .range([scatterHeight, 0]);
+        .range([chartHeight, 0]);
     
     scatterG.append('g')
         .attr('class', 'grid')
@@ -347,38 +350,38 @@ export async function initPoliticalAnalysis(containerId) {
         .attr('x1', xScatterScale(0))
         .attr('x2', xScatterScale(0))
         .attr('y1', 0)
-        .attr('y2', scatterHeight)
+        .attr('y2', chartHeight)
         .attr('stroke', '#999')
-        .attr('stroke-width', 2)
-        .attr('stroke-dasharray', '5,5');
+        .attr('stroke-width', 1.5)
+        .attr('stroke-dasharray', '4,4');
     
     scatterG.append('g')
-        .attr('transform', `translate(0,${scatterHeight})`)
+        .attr('transform', `translate(0,${chartHeight})`)
         .call(d3.axisBottom(xScatterScale).tickFormat(d => {
             if (d < 0) return `Biden +${Math.abs(d)}`;
             if (d > 0) return `Trump +${d}`;
             return 'Even';
         }))
-        .style('font-size', '11px');
+        .style('font-size', '10px');
     
     scatterG.append('g')
         .call(d3.axisLeft(yScatterScale).tickFormat(d => d + '%'))
-        .style('font-size', '12px');
+        .style('font-size', '11px');
     
     scatterG.append('text')
         .attr('x', chartWidth / 2)
-        .attr('y', scatterHeight + 50)
+        .attr('y', chartHeight + 40)
         .attr('text-anchor', 'middle')
-        .style('font-size', '14px')
+        .style('font-size', '12px')
         .style('fill', '#666')
         .text('Political Margin (2020 Election)');
     
     scatterG.append('text')
         .attr('transform', 'rotate(-90)')
-        .attr('y', -60)
-        .attr('x', -scatterHeight / 2)
+        .attr('y', -45)
+        .attr('x', -chartHeight / 2)
         .attr('text-anchor', 'middle')
-        .style('font-size', '14px')
+        .style('font-size', '12px')
         .style('fill', '#666')
         .text('Vaccination Rate (%)');
     
@@ -391,21 +394,21 @@ export async function initPoliticalAnalysis(containerId) {
             return xScatterScale(margin);
         })
         .attr('cy', d => yScatterScale(d.vax_rate))
-        .attr('r', 6)
+        .attr('r', 5)
         .attr('fill', d => d.political_lean === 'Blue' ? '#2196F3' : '#f44336')
         .attr('opacity', 0.7)
         .attr('stroke', 'white')
-        .attr('stroke-width', 2)
+        .attr('stroke-width', 1.5)
         .on('mouseover', function(event, d) {
-            d3.select(this).attr('r', 9).attr('opacity', 1);
+            d3.select(this).attr('r', 7).attr('opacity', 1);
             const tooltip = d3.select('body').append('div')
                 .attr('class', 'scatter-tooltip')
                 .style('position', 'absolute')
                 .style('background', 'rgba(0,0,0,0.9)')
                 .style('color', 'white')
-                .style('padding', '12px')
-                .style('border-radius', '6px')
-                .style('font-size', '13px')
+                .style('padding', '10px')
+                .style('border-radius', '5px')
+                .style('font-size', '12px')
                 .style('pointer-events', 'none')
                 .style('left', (event.pageX + 10) + 'px')
                 .style('top', (event.pageY - 20) + 'px')
@@ -417,7 +420,7 @@ export async function initPoliticalAnalysis(containerId) {
                 `);
         })
         .on('mouseout', function() {
-            d3.select(this).attr('r', 6).attr('opacity', 0.7);
+            d3.select(this).attr('r', 5).attr('opacity', 0.7);
             d3.selectAll('.scatter-tooltip').remove();
         });
     
@@ -428,19 +431,19 @@ export async function initPoliticalAnalysis(containerId) {
         .attr('class', 'state-label')
         .attr('x', d => {
             const margin = d.political_lean === 'Blue' ? -d.margin : d.margin;
-            return xScatterScale(margin) + 10;
+            return xScatterScale(margin) + 8;
         })
-        .attr('y', d => yScatterScale(d.vax_rate) + 5)
-        .style('font-size', '11px')
+        .attr('y', d => yScatterScale(d.vax_rate) + 4)
+        .style('font-size', '10px')
         .style('font-weight', 'bold')
         .style('fill', '#333')
         .text(d => d.state);
     
     scatterG.append('text')
-        .attr('x', chartWidth - 20)
-        .attr('y', 20)
+        .attr('x', chartWidth - 15)
+        .attr('y', 15)
         .attr('text-anchor', 'end')
-        .style('font-size', '12px')
+        .style('font-size', '11px')
         .style('fill', '#666')
         .text(`Correlation: ${data.summary_stats.correlation_biden_vax.toFixed(3)}`);
 }
