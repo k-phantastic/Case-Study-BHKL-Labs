@@ -1,0 +1,586 @@
+{
+  "metadata": {
+    "latest_year": 2023,
+    "description": "Political lean and urban/rural analysis of COVID-19 vaccination rates",
+    "source": "CDC vaccination data + 2020 election results + Census urban/rural classification"
+  },
+  "time_series": [
+    {
+      "year": 2020,
+      "red_states_avg": 0.0,
+      "blue_states_avg": 0.0
+    },
+    {
+      "year": 2021,
+      "red_states_avg": 32.26,
+      "blue_states_avg": 39.03
+    },
+    {
+      "year": 2022,
+      "red_states_avg": 57.3,
+      "blue_states_avg": 67.93
+    },
+    {
+      "year": 2023,
+      "red_states_avg": 60.53,
+      "blue_states_avg": 72.42
+    }
+  ],
+  "states": [
+    {
+      "state": "AL",
+      "vax_rate": 53.15,
+      "political_lean": "Red",
+      "biden_pct": 36.6,
+      "trump_pct": 62.0,
+      "margin": 25.4,
+      "urban_pct": 59.0,
+      "urban_rural_class": "Mixed"
+    },
+    {
+      "state": "AK",
+      "vax_rate": 65.12,
+      "political_lean": "Red",
+      "biden_pct": 42.8,
+      "trump_pct": 52.8,
+      "margin": 10.0,
+      "urban_pct": 66.0,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "AZ",
+      "vax_rate": 66.06,
+      "political_lean": "Blue",
+      "biden_pct": 49.4,
+      "trump_pct": 49.1,
+      "margin": 0.3,
+      "urban_pct": 89.8,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "AR",
+      "vax_rate": 56.88,
+      "political_lean": "Red",
+      "biden_pct": 34.8,
+      "trump_pct": 62.4,
+      "margin": 27.6,
+      "urban_pct": 56.2,
+      "urban_rural_class": "Mixed"
+    },
+    {
+      "state": "CA",
+      "vax_rate": 74.71,
+      "political_lean": "Blue",
+      "biden_pct": 63.5,
+      "trump_pct": 34.3,
+      "margin": 29.2,
+      "urban_pct": 95.0,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "CO",
+      "vax_rate": 73.54,
+      "political_lean": "Blue",
+      "biden_pct": 55.4,
+      "trump_pct": 41.9,
+      "margin": 13.5,
+      "urban_pct": 86.2,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "CT",
+      "vax_rate": 83.05,
+      "political_lean": "Blue",
+      "biden_pct": 59.3,
+      "trump_pct": 39.2,
+      "margin": 20.1,
+      "urban_pct": 88.0,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "DE",
+      "vax_rate": 73.31,
+      "political_lean": "Blue",
+      "biden_pct": 58.7,
+      "trump_pct": 39.8,
+      "margin": 18.9,
+      "urban_pct": 83.3,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "DC",
+      "vax_rate": 90.36,
+      "political_lean": "Blue",
+      "biden_pct": 92.1,
+      "trump_pct": 5.4,
+      "margin": 86.7,
+      "urban_pct": 100.0,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "FL",
+      "vax_rate": 69.48,
+      "political_lean": "Red",
+      "biden_pct": 47.9,
+      "trump_pct": 51.2,
+      "margin": 3.3,
+      "urban_pct": 91.2,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "GA",
+      "vax_rate": 57.32,
+      "political_lean": "Blue",
+      "biden_pct": 49.5,
+      "trump_pct": 49.3,
+      "margin": 0.2,
+      "urban_pct": 75.1,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "HI",
+      "vax_rate": 0.0,
+      "political_lean": "Blue",
+      "biden_pct": 63.7,
+      "trump_pct": 34.3,
+      "margin": 29.4,
+      "urban_pct": 91.9,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "ID",
+      "vax_rate": 56.49,
+      "political_lean": "Red",
+      "biden_pct": 33.1,
+      "trump_pct": 63.9,
+      "margin": 30.8,
+      "urban_pct": 70.6,
+      "urban_rural_class": "Mixed"
+    },
+    {
+      "state": "IL",
+      "vax_rate": 71.3,
+      "political_lean": "Blue",
+      "biden_pct": 57.5,
+      "trump_pct": 40.6,
+      "margin": 16.9,
+      "urban_pct": 88.5,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "IN",
+      "vax_rate": 57.76,
+      "political_lean": "Red",
+      "biden_pct": 41.0,
+      "trump_pct": 57.0,
+      "margin": 16.0,
+      "urban_pct": 72.4,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "IA",
+      "vax_rate": 64.39,
+      "political_lean": "Red",
+      "biden_pct": 44.9,
+      "trump_pct": 53.1,
+      "margin": 8.2,
+      "urban_pct": 64.0,
+      "urban_rural_class": "Mixed"
+    },
+    {
+      "state": "KS",
+      "vax_rate": 65.34,
+      "political_lean": "Red",
+      "biden_pct": 41.6,
+      "trump_pct": 56.2,
+      "margin": 14.6,
+      "urban_pct": 74.2,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "KY",
+      "vax_rate": 59.62,
+      "political_lean": "Red",
+      "biden_pct": 36.2,
+      "trump_pct": 62.1,
+      "margin": 25.9,
+      "urban_pct": 58.4,
+      "urban_rural_class": "Mixed"
+    },
+    {
+      "state": "LA",
+      "vax_rate": 55.02,
+      "political_lean": "Red",
+      "biden_pct": 39.9,
+      "trump_pct": 58.5,
+      "margin": 18.6,
+      "urban_pct": 73.2,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "ME",
+      "vax_rate": 83.36,
+      "political_lean": "Blue",
+      "biden_pct": 53.1,
+      "trump_pct": 44.0,
+      "margin": 9.1,
+      "urban_pct": 38.7,
+      "urban_rural_class": "Rural"
+    },
+    {
+      "state": "MD",
+      "vax_rate": 79.76,
+      "political_lean": "Blue",
+      "biden_pct": 65.4,
+      "trump_pct": 32.2,
+      "margin": 33.2,
+      "urban_pct": 87.2,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "MA",
+      "vax_rate": 84.29,
+      "political_lean": "Blue",
+      "biden_pct": 65.6,
+      "trump_pct": 32.1,
+      "margin": 33.5,
+      "urban_pct": 92.0,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "MI",
+      "vax_rate": 62.39,
+      "political_lean": "Blue",
+      "biden_pct": 50.6,
+      "trump_pct": 47.8,
+      "margin": 2.8,
+      "urban_pct": 74.7,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "MN",
+      "vax_rate": 72.18,
+      "political_lean": "Blue",
+      "biden_pct": 52.4,
+      "trump_pct": 45.3,
+      "margin": 7.1,
+      "urban_pct": 73.3,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "MS",
+      "vax_rate": 53.67,
+      "political_lean": "Red",
+      "biden_pct": 41.1,
+      "trump_pct": 57.6,
+      "margin": 16.5,
+      "urban_pct": 49.4,
+      "urban_rural_class": "Rural"
+    },
+    {
+      "state": "MO",
+      "vax_rate": 59.07,
+      "political_lean": "Red",
+      "biden_pct": 41.4,
+      "trump_pct": 56.8,
+      "margin": 15.4,
+      "urban_pct": 70.4,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "MT",
+      "vax_rate": 59.15,
+      "political_lean": "Red",
+      "biden_pct": 40.6,
+      "trump_pct": 56.9,
+      "margin": 16.3,
+      "urban_pct": 55.9,
+      "urban_rural_class": "Mixed"
+    },
+    {
+      "state": "NE",
+      "vax_rate": 66.3,
+      "political_lean": "Red",
+      "biden_pct": 39.2,
+      "trump_pct": 58.2,
+      "margin": 19.0,
+      "urban_pct": 73.1,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "NV",
+      "vax_rate": 63.71,
+      "political_lean": "Blue",
+      "biden_pct": 50.1,
+      "trump_pct": 47.7,
+      "margin": 2.4,
+      "urban_pct": 94.2,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "NH",
+      "vax_rate": 71.98,
+      "political_lean": "Blue",
+      "biden_pct": 52.7,
+      "trump_pct": 45.4,
+      "margin": 7.3,
+      "urban_pct": 60.3,
+      "urban_rural_class": "Mixed"
+    },
+    {
+      "state": "NJ",
+      "vax_rate": 79.14,
+      "political_lean": "Blue",
+      "biden_pct": 57.3,
+      "trump_pct": 41.4,
+      "margin": 15.9,
+      "urban_pct": 94.7,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "NM",
+      "vax_rate": 75.23,
+      "political_lean": "Blue",
+      "biden_pct": 54.3,
+      "trump_pct": 43.5,
+      "margin": 10.8,
+      "urban_pct": 77.4,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "NY",
+      "vax_rate": 80.83,
+      "political_lean": "Blue",
+      "biden_pct": 60.9,
+      "trump_pct": 37.7,
+      "margin": 23.2,
+      "urban_pct": 87.9,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "NC",
+      "vax_rate": 67.07,
+      "political_lean": "Red",
+      "biden_pct": 48.6,
+      "trump_pct": 49.9,
+      "margin": 1.3,
+      "urban_pct": 66.1,
+      "urban_rural_class": "Mixed"
+    },
+    {
+      "state": "ND",
+      "vax_rate": 58.67,
+      "political_lean": "Red",
+      "biden_pct": 31.8,
+      "trump_pct": 65.1,
+      "margin": 33.3,
+      "urban_pct": 59.9,
+      "urban_rural_class": "Mixed"
+    },
+    {
+      "state": "OH",
+      "vax_rate": 60.49,
+      "political_lean": "Red",
+      "biden_pct": 45.2,
+      "trump_pct": 53.3,
+      "margin": 8.1,
+      "urban_pct": 77.9,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "OK",
+      "vax_rate": 60.49,
+      "political_lean": "Red",
+      "biden_pct": 32.3,
+      "trump_pct": 65.4,
+      "margin": 33.1,
+      "urban_pct": 66.2,
+      "urban_rural_class": "Mixed"
+    },
+    {
+      "state": "OR",
+      "vax_rate": 72.45,
+      "political_lean": "Blue",
+      "biden_pct": 56.5,
+      "trump_pct": 40.4,
+      "margin": 16.1,
+      "urban_pct": 81.0,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "PA",
+      "vax_rate": 73.44,
+      "political_lean": "Blue",
+      "biden_pct": 50.0,
+      "trump_pct": 48.8,
+      "margin": 1.2,
+      "urban_pct": 78.7,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "RI",
+      "vax_rate": 87.76,
+      "political_lean": "Blue",
+      "biden_pct": 59.4,
+      "trump_pct": 38.6,
+      "margin": 20.8,
+      "urban_pct": 90.9,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "SC",
+      "vax_rate": 59.91,
+      "political_lean": "Red",
+      "biden_pct": 43.4,
+      "trump_pct": 55.1,
+      "margin": 11.7,
+      "urban_pct": 66.3,
+      "urban_rural_class": "Mixed"
+    },
+    {
+      "state": "SD",
+      "vax_rate": 66.28,
+      "political_lean": "Red",
+      "biden_pct": 35.6,
+      "trump_pct": 61.8,
+      "margin": 26.2,
+      "urban_pct": 56.7,
+      "urban_rural_class": "Mixed"
+    },
+    {
+      "state": "TN",
+      "vax_rate": 56.28,
+      "political_lean": "Red",
+      "biden_pct": 37.5,
+      "trump_pct": 60.7,
+      "margin": 23.2,
+      "urban_pct": 66.4,
+      "urban_rural_class": "Mixed"
+    },
+    {
+      "state": "TX",
+      "vax_rate": 63.29,
+      "political_lean": "Red",
+      "biden_pct": 46.5,
+      "trump_pct": 52.1,
+      "margin": 5.6,
+      "urban_pct": 84.7,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "UT",
+      "vax_rate": 66.76,
+      "political_lean": "Red",
+      "biden_pct": 37.6,
+      "trump_pct": 58.1,
+      "margin": 20.5,
+      "urban_pct": 90.6,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "VT",
+      "vax_rate": 85.73,
+      "political_lean": "Blue",
+      "biden_pct": 66.1,
+      "trump_pct": 30.7,
+      "margin": 35.4,
+      "urban_pct": 38.9,
+      "urban_rural_class": "Rural"
+    },
+    {
+      "state": "VA",
+      "vax_rate": 76.62,
+      "political_lean": "Blue",
+      "biden_pct": 54.1,
+      "trump_pct": 44.0,
+      "margin": 10.1,
+      "urban_pct": 75.5,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "WA",
+      "vax_rate": 76.11,
+      "political_lean": "Blue",
+      "biden_pct": 58.0,
+      "trump_pct": 38.8,
+      "margin": 19.2,
+      "urban_pct": 84.1,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "WV",
+      "vax_rate": 59.69,
+      "political_lean": "Red",
+      "biden_pct": 29.7,
+      "trump_pct": 68.6,
+      "margin": 38.9,
+      "urban_pct": 48.7,
+      "urban_rural_class": "Rural"
+    },
+    {
+      "state": "WI",
+      "vax_rate": 68.22,
+      "political_lean": "Blue",
+      "biden_pct": 49.4,
+      "trump_pct": 48.8,
+      "margin": 0.6,
+      "urban_pct": 70.2,
+      "urban_rural_class": "Urban"
+    },
+    {
+      "state": "WY",
+      "vax_rate": 53.01,
+      "political_lean": "Red",
+      "biden_pct": 26.6,
+      "trump_pct": 69.9,
+      "margin": 43.3,
+      "urban_pct": 64.9,
+      "urban_rural_class": "Mixed"
+    }
+  ],
+  "urban_rural_breakdown": [
+    {
+      "political_lean": "Red",
+      "urban_rural_class": "Urban",
+      "avg_vax_rate": 62.86,
+      "count": 10
+    },
+    {
+      "political_lean": "Red",
+      "urban_rural_class": "Mixed",
+      "avg_vax_rate": 59.34,
+      "count": 13
+    },
+    {
+      "political_lean": "Red",
+      "urban_rural_class": "Rural",
+      "avg_vax_rate": 56.68,
+      "count": 2
+    },
+    {
+      "political_lean": "Blue",
+      "urban_rural_class": "Urban",
+      "avg_vax_rate": 71.38,
+      "count": 23
+    },
+    {
+      "political_lean": "Blue",
+      "urban_rural_class": "Mixed",
+      "avg_vax_rate": 71.98,
+      "count": 1
+    },
+    {
+      "political_lean": "Blue",
+      "urban_rural_class": "Rural",
+      "avg_vax_rate": 84.55,
+      "count": 2
+    }
+  ],
+  "summary_stats": {
+    "latest_year": 2023,
+    "blue_states_avg": 72.42,
+    "red_states_avg": 60.53,
+    "gap": 11.88,
+    "correlation_biden_vax": 0.483
+  }
+}
