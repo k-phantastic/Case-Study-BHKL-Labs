@@ -374,7 +374,7 @@ section {
     padding: 2rem;
     scroll-snap-align: start;
     scroll-snap-stop: always;
-    opacity: 0.3;
+    opacity: 0;
     pointer-events: none;
     transition: opacity 0.5s ease;
 }
@@ -544,8 +544,27 @@ section {
     pointer-events: all;
 }
 
+
 .political-viz-container {
-    max-width: 900px !important;
-    margin: 0 auto;
-    padding: 20px !important;
+    max-width: 700px !important;
+    margin: 0 auto !important;
+    padding: 15px !important;
+    overflow: visible !important;
 }
+
+.political-viz-container svg {
+    max-width: 100%;
+    height: auto;
+}
+
+.chart-container {
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    padding: 1.5rem !important;  
+    display: inline-block;
+    max-width: 95%;  
+    overflow-y: auto; 
+    max-height: 85vh;  
+}
+
