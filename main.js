@@ -16,7 +16,8 @@ const height = initialHeight || 600;
 svg
     .attr("viewBox", `0 0 ${width} ${height}`)
     .attr("preserveAspectRatio", "xMidYMid meet")
-// State variables (simplified)
+
+// State variables
 let currentState = null;
 let statesData = null;
 let countiesData = null;
@@ -64,41 +65,77 @@ d3.select("#year-select").on("change", function () {
 });
 
 // Load all data
-Promise.all([
-    d3.json("./data/states-10m.json"),
-    d3.json("./data/counties-10m.json")
-])
-    .then(([states, counties]) => {
-        statesData = topojson.feature(states, states.objects.states);
-        countiesData = topojson.feature(counties, counties.objects.counties);
+console.log("Starting data load...");
 
-        console.log("TopoJSON loaded:", statesData, countiesData);
+// Helper function to load JSON with specific error handling
+function loadData(url, name) {
+    return d3.json(url).catch(err => {
+        console.error(`Failed to load ${name} from ${url}:`, err);
+        throw err;
+    });
+}
+
+// Load files individually to pinpoint the error
+Promise.all([
+    loadData("./data/states-10m.json", "States"),
+    loadData("./data/counties-10m.json", "Counties"),
+    loadData("./data/vaccination_data.json", "Vaccination Data")
+])
+    .then(([states, counties, vaxData]) => {
+        console.log("All data files loaded successfully.");
+
+        if (!states || !counties || !vaxData) {
+            throw new Error("One or more data files failed to load or are empty.");
+        }
+
+        try {
+            statesData = topojson.feature(states, states.objects.states);
+            countiesData = topojson.feature(counties, counties.objects.counties);
+        } catch (e) {
+            console.error("TopoJSON parsing error:", e);
+            throw new Error("Failed to parse TopoJSON data.");
+        }
+
+        vaccinationData = vaxData;
+
+        console.log("Data processed:", {
+            states: statesData.features.length,
+            counties: countiesData.features.length,
+            years: vaccinationData.years
+        });
+
+        // Update available years
+        if (vaccinationData.years && vaccinationData.years.length > 0) {
+            availableYears = vaccinationData.years;
+            selectedYear = availableYears[availableYears.length - 1].toString();
+        } else {
+            console.warn("No years found in vaccination data.");
+            availableYears = [2022]; // Fallback
+            selectedYear = "2022";
+        }
+
+        // Populate year selector
+        const yearSelect = d3.select("#year-select");
+        yearSelect.html(""); // Clear existing
+        yearSelect.selectAll("option")
+            .data(availableYears)
+            .enter()
+            .append("option")
+            .attr("value", d => d)
+            .text(d => d)
+            .property("selected", d => d.toString() === selectedYear);
+
         // Draw initial map
         drawStates();
+
+        // Hide loading message
+        d3.select(".loading").style("display", "none");
     })
-    .catch(err => console.error("Failed to load map files", err));
-
-// // Set available years
-// availableYears = summary.years_available; // This line needs attention, maybe AI generated..?
-// selectedYear = availableYears[availableYears.length - 1].toString(); // Most recent year
-
-// Use for temporary, need to be updated
-availableYears = [2020, 2021, 2022];
-selectedYear = "2022";
-
-
-// Populate year selector
-const yearSelect = d3.select("#year-select");
-yearSelect.selectAll("option")
-    .data(availableYears)
-    .enter()
-    .append("option")
-    .attr("value", d => d)
-    .text(d => d)
-    .property("selected", d => d.toString() === selectedYear);
-
-// Hide loading message
-d3.select(".loading").style("display", "none");
+    .catch(err => {
+        console.error("CRITICAL ERROR: Failed to load map data.", err);
+        d3.select(".loading").text(`Error loading data: ${err.message}`);
+        d3.select(".loading").style("color", "red");
+    });
 
 // Draw US states
 function drawStates() {
@@ -108,11 +145,20 @@ function drawStates() {
         .append("path")
         .attr("class", "state")
         .attr("d", path)
-        .attr("fill", "#8DBCF4")
+        .attr("fill", d => getStateColor(d)) // Use data-driven color
         .on("click", handleStateClick)
         .on("mouseover", showStateTooltip)
         .on("mousemove", moveTooltip)
         .on("mouseout", hideTooltip);
+}
+
+// Get color for state based on vaccination rate
+function getStateColor(d) {
+    const value = getVaccinationValue(d.id, selectedYear);
+    if (value === null || value === 0) {
+        return "#8DBCF4"; // Default blue if no data
+    }
+    return colorScale(value);
 }
 
 // Handle state click - zoom and show counties
@@ -140,9 +186,6 @@ function handleStateClick(event, d) {
 
     // Filter counties for this state
     const stateFIPS = d.id;
-    // const stateCounties = countiesData.features.filter(county =>
-    //     Math.floor(county.id / 1000) === stateFIPS
-    // );
     const stateCounties = countiesData.features.filter(county =>
         county.id.slice(0, 2) === stateFIPS
     );
@@ -199,6 +242,17 @@ function handleCountyClick(event, d) {
 
 // Get county name from FIPS
 function getCountyName(fips) {
+    // Try to get name from our data first
+    const fipsStr = String(fips);
+    if (vaccinationData.counties && vaccinationData.counties[fipsStr]) {
+        // Get any year's data to find the name
+        const years = Object.keys(vaccinationData.counties[fipsStr]);
+        if (years.length > 0) {
+            const data = vaccinationData.counties[fipsStr][years[0]];
+            return `${data.name}, ${data.state}`;
+        }
+    }
+
     if (countyNames[fips]) {
         return `${countyNames[fips].county}, ${countyNames[fips].state}`;
     }
@@ -220,9 +274,9 @@ function getStateName(id) {
         41: "Oregon", 42: "Pennsylvania", 44: "Rhode Island", 45: "South Carolina",
         46: "South Dakota", 47: "Tennessee", 48: "Texas", 49: "Utah",
         50: "Vermont", 51: "Virginia", 53: "Washington", 54: "West Virginia",
-        55: "Wisconsin", 56: "Wyoming"
+        55: "Wisconsin", 56: "Wyoming", 72: "Puerto Rico"
     };
-    return stateNames[id] || "Unknown State";
+    return stateNames[parseInt(id)] || "Unknown State";
 }
 
 // Update info panel when state is selected
@@ -230,12 +284,16 @@ function updateInfoPanel() {
     if (!currentState) return;
 
     const stateName = getStateName(currentState.id);
+    const stateRate = getVaccinationValue(currentState.id, selectedYear);
 
     const html = `
         <div class="county-details">
             <h3>${stateName}</h3>
+            <div class="metric">
+                <div class="metric-label">${selectedYear} - State Vaccination Rate</div>
+                <div class="metric-value">${stateRate !== null ? stateRate.toFixed(1) + '%' : 'No Data'}</div>
+            </div>
             <p class="intro-text">
-                Showing vaccination rates for ${selectedYear}.
                 Click on any county to view detailed data.
             </p>
         </div>
@@ -284,9 +342,15 @@ function resetMap() {
 // Tooltip functions
 function showStateTooltip(event, d) {
     const name = getStateName(d.id);
+    const value = getVaccinationValue(d.id, selectedYear);
+
     tooltip
         .style("display", "block")
-        .html(`<strong>${name}</strong><br>Click to explore counties`);
+        .html(`
+            <strong>${name}</strong><br>
+            Fully Vaccinated: ${value !== null ? value.toFixed(1) + '%' : 'No Data'}<br>
+            <span style="font-size: 11px; color: #ccc">Click to explore counties</span>
+        `);
 }
 
 function moveTooltip(event) {
@@ -299,12 +363,18 @@ function hideTooltip() {
     tooltip.style("display", "none");
 }
 
-// Get vaccination value for specific county, year (simplified for single metric)
+// Get vaccination value for specific county/state, year
 function getVaccinationValue(fips, year) {
-    const key = `${fips}_${year}`;
+    const fipsStr = String(fips);
 
-    if (vaccinationData[key] && vaccinationData[key].rate !== undefined) {
-        return vaccinationData[key].rate;
+    // Check counties
+    if (vaccinationData.counties && vaccinationData.counties[fipsStr] && vaccinationData.counties[fipsStr][year]) {
+        return vaccinationData.counties[fipsStr][year].rate;
+    }
+
+    // Check states
+    if (vaccinationData.states && vaccinationData.states[fipsStr] && vaccinationData.states[fipsStr][year]) {
+        return vaccinationData.states[fipsStr][year].rate;
     }
 
     return null;
@@ -312,12 +382,10 @@ function getVaccinationValue(fips, year) {
 
 // Get completeness percentage
 function getCompletenessValue(fips, year) {
-    const key = `${fips}_${year}`;
-
-    if (vaccinationData[key] && vaccinationData[key].completeness !== undefined) {
-        return vaccinationData[key].completeness;
+    const fipsStr = String(fips);
+    if (vaccinationData.counties && vaccinationData.counties[fipsStr] && vaccinationData.counties[fipsStr][year]) {
+        return vaccinationData.counties[fipsStr][year].completeness;
     }
-
     return null;
 }
 
@@ -456,16 +524,39 @@ function groupByDate(data) {
     return d3.group(data, d => +d.date);  // numeric date key
 }
 
-let data = await loadKaggleData();
+// Global variables for race chart
+let raceData = null;
+let raceDates = null;
+let raceByDate = null;
 
-data = filterByState(data, "California");
-data = runningTotals(data);
-const top5 = getTop5Counties(data);
-data = filterTop5(data, top5);
-const byDate = groupByDate(data);
-const dates = Array.from(byDate.keys()).sort(d3.ascending);
+async function prepareRaceData() {
+    try {
+        let data = await loadKaggleData();
+        data = filterByState(data, "California");
+        data = runningTotals(data);
+        const top5 = getTop5Counties(data);
+        data = filterTop5(data, top5);
+        raceByDate = groupByDate(data);
+        raceDates = Array.from(raceByDate.keys()).sort(d3.ascending);
+        console.log("Race chart data prepared");
+    } catch (err) {
+        console.error("Failed to prepare race data:", err);
+    }
+}
+
+// Start loading race data in background
+prepareRaceData();
 
 async function renderBarRace(containerId) {
+    // Wait for data if not ready
+    if (!raceByDate) {
+        console.log("Waiting for race data...");
+        // Simple polling wait
+        while (!raceByDate) {
+            await new Promise(r => setTimeout(r, 100));
+        }
+    }
+
     const container = document.getElementById(containerId);
     // Dimensions
     const margin = { top: 20, right: 20, bottom: 80, left: 250 };
@@ -502,7 +593,7 @@ async function renderBarRace(containerId) {
     let frameIndex = 0;
     let isRunning = false;
     function updateFrame(dateKey) {
-        const frameData = byDate.get(dateKey);
+        const frameData = raceByDate.get(dateKey);
 
         frameData.sort((a, b) => d3.descending(a.running_total_deaths, b.running_total_deaths));
 
@@ -555,10 +646,10 @@ async function renderBarRace(containerId) {
     function animate() {
         if (!isRunning) return;
 
-        updateFrame(dates[frameIndex]);
+        updateFrame(raceDates[frameIndex]);
 
         frameIndex++;
-        if (frameIndex < dates.length) {
+        if (frameIndex < raceDates.length) {
             timer = setTimeout(animate, 200);
         } else {
             isRunning = false;
