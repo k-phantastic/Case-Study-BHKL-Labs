@@ -465,7 +465,7 @@ function showCountyTooltip(event, d) {
 
 // ========================= KP Bar Plot Race Animation =========================
 async function loadKaggleData() {
-    const parseDate = d3.timeParse("%m/%d/%Y"); // Adjust date format as needed, e.g., "1/22/2020"
+    const parseDate = d3.timeParse("%m/%d/%y"); // Adjust date format as needed, e.g., "1/22/2020"
     const data = await d3.csv('data/kaggle_usa_county_wise.csv', (row) => ({
         ...row,
         lat: +row['Lat'],
@@ -559,8 +559,8 @@ async function renderBarRace(containerId) {
 
     const container = document.getElementById(containerId);
     // Dimensions
-    const margin = { top: 20, right: 20, bottom: 80, left: 250 };
-    const width = 800 - margin.left - margin.right;
+    const margin = { top: 50, right: 80, bottom: 80, left: 250 };
+    const width = 900 - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
 
     const svg = d3.select(container)
@@ -570,21 +570,24 @@ async function renderBarRace(containerId) {
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
+    // X-axis
+    svg.append("g")
+        .attr("class", "x-axis")
+        .attr("transform", `translate(0, ${height})`);
+
+    // X-axis label
+    svg.append("text")
+        .attr("class", "x-axis-label")
+        .attr("x", width / 2)
+        .attr("y", height + 40)
+        .attr("text-anchor", "middle")
+        .style("font-size", "14px")
+        .style("fill", "#333")
+        .text("Total COVID-19 Deaths");
+    
     // Scales
     const x = d3.scaleLinear().range([0, width]);
     const y = d3.scaleBand().range([0, height]).padding(0.2);
-
-    // Axes
-    // svg.append("g")
-    //     .attr("class", "x-axis")
-    //     .attr("transform", `translate(0, ${height})`);
-
-    // svg.append("text")
-    //     .attr("class", "x-axis-label")
-    //     .attr("x", width / 2)
-    //     .attr("y", height + 45)
-    //     .attr("text-anchor", "middle")
-    //     .text("Running Total");
 
     // Color scale
     const color = d3.scaleOrdinal(d3.schemeTableau10);
@@ -592,12 +595,14 @@ async function renderBarRace(containerId) {
     // Initial date/frame
     let frameIndex = 0;
     let isRunning = false;
+    const animationSpeed = 100; // milliseconds
     function updateFrame(dateKey) {
         const frameData = raceByDate.get(dateKey);
 
         frameData.sort((a, b) => d3.descending(a.running_total_deaths, b.running_total_deaths));
 
         x.domain([0, d3.max(frameData, d => d.running_total_deaths)]);
+
         svg.select(".x-axis")
             .transition()
             .duration(200)
@@ -617,16 +622,17 @@ async function renderBarRace(containerId) {
             .attr("fill", d => color(d.Combined_Key))
             .merge(bars)
             .transition()
-            .duration(100)   // adjust animation speed
+            .duration(animationSpeed)   // adjust animation speed
             .attr("width", d => x(d.running_total_deaths));
         bars.exit().remove();
 
         // Labels
-        const labels = svg.selectAll("text")
+        const labels = svg.selectAll("text.bar-label")
             .data(frameData, d => d.Combined_Key);
 
         labels.enter()
             .append("text")
+            .attr("class", "bar-label")
             .attr("y", d => y(d.Combined_Key) + y.bandwidth() / 2)
             .attr("x", -10)
             .attr("dy", "0.35em")
@@ -634,11 +640,48 @@ async function renderBarRace(containerId) {
             .text(d => d.Combined_Key)
             .merge(labels)
             .transition()
-            .duration(200)
+            .duration(animationSpeed)
             .attr("y", d => y(d.Combined_Key) + y.bandwidth() / 2);
 
         labels.exit().remove();
+    
+        const valueLabels = svg.selectAll("text.value-label")
+            .data(frameData, d => d.Combined_Key);
+
+        valueLabels.enter()
+            .append("text")
+            .attr("class", "value-label")
+            .attr("y", d => y(d.Combined_Key) + y.bandwidth() / 2)
+            .attr("x", d => x(d.running_total_deaths) + 5)
+            .attr("dy", "0.35em")
+            .attr("text-anchor", "start")
+            .style("font-size", "12px")
+            .style("font-weight", "bold")
+            .style("fill", "#333")
+            .text(d => d3.format(",")(d.running_total_deaths))
+            .merge(valueLabels)
+            .transition()
+            .duration(animationSpeed)
+            .attr("y", d => y(d.Combined_Key) + y.bandwidth() / 2)
+            .attr("x", d => x(d.running_total_deaths) + 5)
+            .text(d => d3.format(",")(d.running_total_deaths));
+
+        valueLabels.exit().remove();
+
+        const dateFormat = d3.timeFormat("%B %d, %Y");
+        const displayDate = dateFormat(new Date(dateKey));
+        svg.selectAll(".date-label").remove();
+        svg.append("text")
+            .attr("class", "date-label")
+            .attr("x", width)
+            .attr("y", height - 10)
+            .attr("text-anchor", "end")
+            .style("font-size", "24px")
+            .style("fill", "#999")
+            .text(displayDate);
+
     }
+    updateFrame(raceDates[0]);
 
     // Animate through dates like Plotly's animation_frame
     let timer = null;
@@ -650,20 +693,20 @@ async function renderBarRace(containerId) {
 
         frameIndex++;
         if (frameIndex < raceDates.length) {
-            timer = setTimeout(animate, 200);
+            timer = setTimeout(animate, animationSpeed);
         } else {
             isRunning = false;
         }
     }
-    document.getElementById("startRace").onclick = () => {
+    document.getElementById("barChartStartRace").onclick = () => {
         if (!isRunning) {
             isRunning = true;
-            frameIndex = 0;
+            // frameIndex = 0;
             animate();
         }
     };
 
-    document.getElementById("stopRace").onclick = () => {
+    document.getElementById("barChartStopRace").onclick = () => {
         isRunning = false;
         clearTimeout(timer);
     };
