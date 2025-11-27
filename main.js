@@ -605,7 +605,7 @@ async function renderBarRace(containerId) {
 
         svg.select(".x-axis")
             .transition()
-            .duration(200)
+            .duration(animationSpeed)
             .call(d3.axisBottom(x).ticks(5).tickSizeOuter(0));
 
         y.domain(frameData.map(d => d.Combined_Key));
@@ -622,7 +622,9 @@ async function renderBarRace(containerId) {
             .attr("fill", d => color(d.Combined_Key))
             .merge(bars)
             .transition()
-            .duration(animationSpeed)   // adjust animation speed
+            .duration(animationSpeed)   // Adjust duration for smoother animation
+            .attr("y", d => y(d.Combined_Key))
+            .attr("height", y.bandwidth())
             .attr("width", d => x(d.running_total_deaths));
         bars.exit().remove();
 
@@ -710,6 +712,13 @@ async function renderBarRace(containerId) {
         isRunning = false;
         clearTimeout(timer);
     };
+
+    document.getElementById("barChartResetRace")?.addEventListener("click", () => {
+        isRunning = false;
+        clearTimeout(timer);
+        frameIndex = 0;
+        updateFrame(raceDates[0]);
+    });
 
     animate();
 }

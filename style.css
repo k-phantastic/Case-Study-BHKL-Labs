@@ -459,7 +459,7 @@ section {
     justify-content: center;
     gap: 15px;
 }
-#barChartStartRace, #barChartStopRace {
+#barChartStartRace, #barChartStopRace, #barChartResetRace {
     text-decoration: none;
     color: white;
     font-weight: 600;
@@ -471,7 +471,7 @@ section {
     cursor: pointer;
 }
 
-#barChartStartRace:hover, #barChartStopRace:hover {
+#barChartStartRace:hover, #barChartStopRace:hover, #barChartResetRace:hover {
     background: white;
     color: #136eff;
     border-color: white;
