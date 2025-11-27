@@ -63,6 +63,9 @@ header {
     flex-direction: row;
     width: 100%;
     height: calc(100vh - 80px);
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 #map-container {
@@ -91,7 +94,6 @@ header {
     position: relative;
     background: white;
 }
-
 
 .state {
     stroke: #ffffff;
@@ -468,6 +470,33 @@ body {
 .progress-dot.active {
     background: white;
     transform: scale(1.25);
+}
+
+/* Title Navigation */
+#title-nav {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 2rem;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    padding: 10px 25px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link:hover {
+    background: white;
+    color: #136eff;
+    border-color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .progress-dot:hover {

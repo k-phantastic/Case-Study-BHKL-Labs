@@ -13,88 +13,90 @@
 </head>
 
 <body>
-    <header id="header">
-        <h1 id="main-title">BHKL Labs COVID-19 Visualization</h1>
-        <nav id="main-nav">
-            <a href="index.html" class="active">Home</a>
-            <a href="about-project/index.html">About Project</a>
-            <a href="https://github.com/k-phantastic/Case-Study-BHKL-Labs" target="_blank">Source Code</a>
-        </nav>
-        <p>Debug Placeholder: 9:40pm</p>
-
-        <p> Data Sources: </p>
-    </header>
-
-    <section id="map-section">
-        <div id="layout">
-            <div id="map-container">
-                <!-- <div class="loading">Loading map data...</div> -->
-                <svg id="map"></svg>
-                <button id="reset-btn">← Back to US Map</button>
-
-                <div class="legend">
-                    <div class="legend-title">Vaccination Rate (%)</div>
-                    <div class="legend-scale" id="legend-gradient"></div>
-                    <div class="legend-labels">
-                        <span>0%</span>
-                        <span>50%</span>
-                        <span>100%</span>
-                    </div>
-                </div>
-
-                <div class="tooltip" id="tooltip"></div>
-            </div>
-            <div id="info-panel">
-                <h2>COVID-19 Vaccination Explorer</h2>
-                <p class="intro-text">
-                    Explore county-level COVID-19 vaccination rates across the United States.
-                    Click on any state to view detailed county data.
-                </p>
-
-                <div class="controls">
-                    <div class="control-group">
-                        <label for="year-select">Select Year:</label>
-                        <select id="year-select">
-                        </select>
-                    </div>
-
-
-                    <div class="control-group">
-                        <label for="metric-select">Vaccination Metric:</label>
-                        <select id="metric-select">
-                            <option value="rate">Fully Vaccinated</option>
-                            <option value="dose1_rate">First Dose</option>
-                            <option value="booster_rate">Booster Dose</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div id="county-details-container"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- <div class="animation-prototype">
-        <iframe src="additional_files/covid_animation.html" width="100%" height="600" style="border:none;">
-        </iframe>
-    </div> -->
-
     <!-- Scrolly-telling sections -->
 
-    <!-- Slide 0 - Title -->
+    <!-- Slide 1 - Title & Navigation -->
     <section class="step" data-step="0">
         <div class="slide-content">
             <h1 class="main-title">BHKL Labs COVID-19 Visualization</h1>
             <p class="subtitle">For Scrollytelling</p>
+
+            <nav id="title-nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about-project/index.html" class="nav-link">About Project</a>
+                <a href="https://github.com/k-phantastic/Case-Study-BHKL-Labs" target="_blank" class="nav-link">Source
+                    Code</a>
+            </nav>
+
+            <div style="margin-top: 2rem;">
+                <p>Debug Placeholder: 9:40pm</p>
+                <p>Data Sources:</p>
+            </div>
+
+            <div class="scroll-indicator" style="margin-top: 3rem;">
+                <p>Scroll to Begin</p>
+                <div style="font-size: 2rem;">↓</div>
+            </div>
         </div>
     </section>
 
-    <!-- Slide 1 -->
+    <!-- Slide 2 - Map -->
     <section class="step" data-step="1">
+        <div class="slide-content" style="width: 100%; max-width: 1400px;">
+            <div id="layout">
+                <div id="map-container">
+                    <!-- <div class="loading">Loading map data...</div> -->
+                    <svg id="map"></svg>
+                    <button id="reset-btn">← Back to US Map</button>
+
+                    <div class="legend">
+                        <div class="legend-title">Vaccination Rate (%)</div>
+                        <div class="legend-scale" id="legend-gradient"></div>
+                        <div class="legend-labels">
+                            <span>0%</span>
+                            <span>50%</span>
+                            <span>100%</span>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div id="info-panel" style="text-align: left; color: #333;">
+                    <h2>COVID-19 Vaccination Explorer</h2>
+                    <p class="intro-text">
+                        Explore county-level COVID-19 vaccination rates across the United States.
+                        Click on any state to view detailed county data.
+                    </p>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label for="year-select">Select Year:</label>
+                            <select id="year-select">
+                            </select>
+                        </div>
+
+
+                        <div class="control-group">
+                            <label for="metric-select">Vaccination Metric:</label>
+                            <select id="metric-select">
+                                <option value="rate">Fully Vaccinated</option>
+                                <option value="dose1_rate">First Dose</option>
+                                <option value="booster_rate">Booster Dose</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="county-details-container"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 3 - Bar Chart Race -->
+    <section class="step" data-step="2">
         <div class="slide-content">
             <h2 class="slide-title">COVID-19 Deaths in top 5 California Counties</h2>
             <p class="slide-text">Need to fix x-axis and animation control, perhaps add additional filtering tools</p>
-
 
             <div class="chart-container">
                 <div id="chart1"></div>
@@ -104,17 +106,7 @@
         </div>
     </section>
 
-    <!-- Slide 2 -->
-    <section class="step" data-step="2">
-        <div class="slide-content">
-            <h2 class="slide-title">Slide 2</h2>
-            <p class="slide-text">Slide Text</p>
 
-            <div class="chart-container">
-                <div id="chart2"></div>
-            </div>
-        </div>
-    </section>
 
     <!-- Slide 3 -->
     <section class="step" data-step="3">
@@ -144,6 +136,7 @@
         <div class="progress-dot" data-step="3"></div>
         <div class="progress-dot" data-step="4"></div>
     </div>
+    <div class="tooltip" id="tooltip"></div>
 </body>
 
 </html>

@@ -38,7 +38,7 @@ const path = d3.geoPath().projection(projection);
 // Color scale for choropleth
 const colorScale = d3.scaleSequential()
     .domain([0, 100])
-    .interpolator(d3.interpolateRgb("#f0f7ff", "#0026e6"));
+    .interpolator(d3.interpolateRgb("#d6e4ff", "#1d3fff"));
 
 // Create gradient for legend
 const legendGradient = d3.select("#legend-gradient");
@@ -683,17 +683,29 @@ function initializeStepChart(stepIndex) {
     if (chartsInitialized[stepIndex]) return;
 
     switch (stepIndex) {
+        case 0:
+            // Title slide - no chart
+            chartsInitialized[0] = true;
+            break;
         case 1:
-            renderBarRace('chart1');
+            // Map slide - already initialized
             chartsInitialized[1] = true;
             break;
         case 2:
-            // chartFunction2('chart2');
+            renderBarRace('chart1');
             chartsInitialized[2] = true;
             break;
         case 3:
-            //   chartFunction3('chart3');
+            // Placeholder
             chartsInitialized[3] = true;
+            break;
+        case 4:
+            // Placeholder
+            chartsInitialized[4] = true;
+            break;
+        case 5:
+            // Placeholder
+            chartsInitialized[5] = true;
             break;
     }
 }
