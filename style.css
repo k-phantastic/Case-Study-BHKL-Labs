@@ -374,6 +374,9 @@ section {
     padding: 2rem;
     scroll-snap-align: start;
     scroll-snap-stop: always;
+    opacity: 0.3;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
 }
 
 .slide-content {
@@ -531,6 +534,12 @@ section {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
+
 .progress-dot:hover {
     background: rgba(255, 255, 255, 0.6);
+}
+
+.step.active {
+    opacity: 1;
+    pointer-events: all;
 }
