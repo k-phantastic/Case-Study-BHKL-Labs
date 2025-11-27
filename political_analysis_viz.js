@@ -1,7 +1,4 @@
-// ============================================================================
-// POLITICAL LEAN & URBAN/RURAL VACCINATION ANALYSIS
-// Module to be integrated into main.js for Slide 3 or Slide 4
-// ============================================================================
+
 
 export async function initPoliticalAnalysis(containerId) {
     // Load the political analysis data
@@ -24,9 +21,8 @@ export async function initPoliticalAnalysis(containerId) {
         .style('padding', '30px')
         .style('box-shadow', '0 4px 20px rgba(0,0,0,0.1)');
     
-    // ========================================================================
-    // SECTION 1: Summary Statistics
-    // ========================================================================
+
+    // Summary Statistics
     const summaryDiv = vizContainer.append('div')
         .attr('class', 'summary-stats')
         .style('margin-bottom', '30px')
@@ -79,9 +75,8 @@ export async function initPoliticalAnalysis(containerId) {
             <div style="font-size: 12px; opacity: 0.8; margin-top: 8px;">Percentage Point Difference</div>
         `);
     
-    // ========================================================================
-    // SECTION 2: Time Series Chart - Red vs Blue Over Time
-    // ========================================================================
+
+    // Time Series Chart - Red vs Blue Over Time
     const timeSeriesDiv = vizContainer.append('div')
         .attr('class', 'time-series-chart')
         .style('margin-bottom', '40px');
@@ -218,9 +213,8 @@ export async function initPoliticalAnalysis(containerId) {
         .style('font-size', '14px')
         .text('Blue States');
     
-    // ========================================================================
-    // SECTION 3: Urban/Rural Breakdown
-    // ========================================================================
+
+    // Urban/Rural Breakdown
     const urbanRuralDiv = vizContainer.append('div')
         .attr('class', 'urban-rural-chart')
         .style('margin-bottom', '40px');
@@ -345,9 +339,7 @@ export async function initPoliticalAnalysis(containerId) {
             .text(d => `${d.avg_vax_rate}%`);
     });
     
-    // ========================================================================
-    // SECTION 4: Scatter Plot - Political Margin vs Vaccination Rate
-    // ========================================================================
+    // Scatter Plot - Political Margin vs Vaccination Rate
     const scatterDiv = vizContainer.append('div')
         .attr('class', 'scatter-chart');
     
@@ -503,9 +495,8 @@ export async function initPoliticalAnalysis(containerId) {
         .html(`Correlation: ${data.summary_stats.correlation_biden_vax.toFixed(3)}`);
 }
 
-// ============================================================================
-// HELPER FUNCTION: Clean up tooltips on slide change
-// ============================================================================
+
+// Clean up tooltips on slide change
 export function cleanupPoliticalAnalysis() {
     d3.selectAll('.bar-tooltip').remove();
     d3.selectAll('.scatter-tooltip').remove();
