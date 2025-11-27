@@ -356,9 +356,13 @@ li a {
 }
 
 /* Scrollytelling Styles */
-body {
-    /* scroll-snap-type: y mandatory; */
+body, html {
+    scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
+}
+
+section {
+    scroll-snap-align: start;
 }
 
 .step {
@@ -446,6 +450,9 @@ body {
     padding: 2rem;
     display: inline-block;
 }
+
+/* Bar Race Plot (Slide 2) */
+
 
 /* Progress indicator */
 .progress-indicator {
