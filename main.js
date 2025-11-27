@@ -7,6 +7,10 @@ import scrollama from 'https://cdn.jsdelivr.net/npm/scrollama@3.2.0/+esm';
 // Import TopoJSON
 import * as topojson from "https://cdn.jsdelivr.net/npm/topojson-client@3/+esm";
 
+//Import PolityicalAnalysis
+import { initPoliticalAnalysis, cleanupPoliticalAnalysis } from './political_analysis_viz.js';
+
+
 // Derive dimensions from the rendered SVG so the map fills its container.
 const svg = d3.select("#map");
 const { width: initialWidth, height: initialHeight } = svg.node().getBoundingClientRect();
@@ -748,8 +752,15 @@ function initializeStepChart(stepIndex) {
             chartsInitialized[2] = true;
             break;
         case 3:
-            // Placeholder
-            chartsInitialized[3] = true;
+            // Political analysis slide
+            initPoliticalAnalysis('chart3')
+                .then(() => {
+                    console.log('Political analysis initialized');
+                    chartsInitialized[3] = true;
+                })
+                .catch(err => {
+                    console.error('Error initializing political analysis:', err);
+                });
             break;
         case 4:
             // Placeholder
@@ -796,6 +807,14 @@ scroller
 
         // Initialize chart for this step
         initializeStepChart(index);
+       })
+    .onStepExit(response => {
+        const { index } = response;
+        
+        // Clean up tooltips when leaving slide 3
+        if (index === 3) {
+            cleanupPoliticalAnalysis();
+        }
     });
 
 // Setup resize
@@ -809,3 +828,4 @@ document.querySelectorAll('.progress-dot').forEach((dot, index) => {
         console.log(`Scrolled to step ${index}`); // Debug log
     });
 });
+
