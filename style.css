@@ -543,3 +543,9 @@ section {
     opacity: 1;
     pointer-events: all;
 }
+
+.political-viz-container {
+    max-width: 900px !important;
+    margin: 0 auto;
+    padding: 20px !important;
+}
