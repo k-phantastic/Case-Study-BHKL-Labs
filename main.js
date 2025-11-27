@@ -38,7 +38,7 @@ const path = d3.geoPath().projection(projection);
 // Color scale for choropleth
 const colorScale = d3.scaleSequential()
     .domain([0, 100])
-    .interpolator(d3.interpolateRgb("#d6e4ff", "#1d3fff"));
+    .interpolator(d3.interpolateRgb("#f0f7ff", "#0026e6"));
 
 // Create gradient for legend
 const legendGradient = d3.select("#legend-gradient");
