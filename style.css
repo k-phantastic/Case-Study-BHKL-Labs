@@ -356,7 +356,8 @@ li a {
 }
 
 /* Scrollytelling Styles */
-body, html {
+body,
+html {
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
     overflow-x: hidden;
@@ -473,7 +474,10 @@ section {
     justify-content: center;
     gap: 15px;
 }
-#barChartStartRace, #barChartStopRace, #barChartResetRace {
+
+#barChartStartRace,
+#barChartStopRace,
+#barChartResetRace {
     text-decoration: none;
     color: white;
     font-weight: 600;
@@ -485,7 +489,9 @@ section {
     cursor: pointer;
 }
 
-#barChartStartRace:hover, #barChartStopRace:hover, #barChartResetRace:hover {
+#barChartStartRace:hover,
+#barChartStopRace:hover,
+#barChartResetRace:hover {
     background: white;
     color: #136eff;
     border-color: white;
@@ -556,6 +562,7 @@ section {
     pointer-events: all;
     z-index: 10;
 }
+
 .political-viz-container {
     max-width: 700px !important;
     width: 100% !important;
@@ -569,6 +576,7 @@ section {
     height: auto;
     display: block;
 }
+
 .step:not(.active) * {
     pointer-events: none !important;
 }
@@ -582,32 +590,3 @@ section {
     z-index: 9999 !important;
     pointer-events: auto !important;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

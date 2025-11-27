@@ -3,31 +3,64 @@ import json
 import numpy as np
 
 # Load the dataset
-file_path = "COVID-19_Vaccinations_in_the_United_States,County_20251119.csv"
+# file_path = "COVID-19_Vaccinations_in_the_United_States,County_20251119.csv"
+# df = pd.read_csv(file_path)
+file_path = (
+    "https://data.cdc.gov/resource/8xkx-amqh.csv?"
+    "$select=fips,recip_state,recip_county,date,"
+    "series_complete_pop_pct,administered_dose1_pop_pct,"
+    "booster_doses_vax_pct,completeness_pct,"
+    "series_complete_yes,census2019"
+    "&$limit=2000000"
+)
 df = pd.read_csv(file_path)
+df.columns = df.columns.str.lower()
 
 # Convert Date to datetime and extract Year
-df['Date'] = pd.to_datetime(df['Date'])
-df['Year'] = df['Date'].dt.year
+df['date'] = pd.to_datetime(df['date'])
+df['year'] = df['date'].dt.year
 
 # Clean and convert columns to numeric
-cols_to_clean = ['Series_Complete_Pop_Pct', 'Series_Complete_Yes', 'Census2019', 'Completeness_pct']
+# cols_to_clean = ['Series_Complete_Pop_Pct',
+#                  'Series_Complete_Yes', 'Census2019', 'Completeness_pct']
+# for col in cols_to_clean:
+#     df[col] = pd.to_numeric(df[col].astype(
+#         str).str.replace(',', ''), errors='coerce')
+cols_to_clean = [
+    'series_complete_pop_pct',
+    'administered_dose1_pop_pct',
+    'booster_doses_vax_pct',
+    'completeness_pct',
+    'series_complete_yes',
+    'census2019'
+]
+
 for col in cols_to_clean:
-    df[col] = pd.to_numeric(df[col].astype(str).str.replace(',', ''), errors='coerce')
+    df[col] = (
+        df[col]
+        .astype(str)
+        .str.replace(',', '')
+        .str.replace('%', '')
+        .replace({"Suppressed": None, "": None})
+    )
+    df[col] = pd.to_numeric(df[col], errors="coerce")
+
 
 # Ensure FIPS is 5-digit string
-df['FIPS'] = df['FIPS'].astype(str).str.split('.').str[0].str.zfill(5)
+df['fips'] = df['fips'].astype(str).str.split('.').str[0].str.zfill(5)
 
 # Filter for relevant years if needed (e.g., 2020-2023)
 # df = df[df['Year'].isin([2020, 2021, 2022, 2023])]
 
 # Aggregate County Data: Take the max value for each year (assuming cumulative or best representation)
-county_vax_by_year = df.groupby(['FIPS', 'Recip_State', 'Recip_County', 'Year'])[['Series_Complete_Pop_Pct', 'Completeness_pct']].max().reset_index()
+county_vax_by_year = df.groupby(['fips', 'recip_state', 'recip_county', 'year'])[
+    ['series_complete_pop_pct', 'administered_dose1_pop_pct', 'booster_doses_vax_pct', 'completeness_pct']].max().reset_index()
 
 # Aggregate State Data: Calculate weighted average
-state_agg = df.groupby(['Recip_State', 'Year']).apply(
-    lambda x: (x['Series_Complete_Yes'].sum() / x['Census2019'].sum()) * 100 if x['Census2019'].sum() > 0 else 0
-).reset_index(name='Series_Complete_Pop_Pct')
+state_agg = df.groupby(['recip_state', 'year']).apply(
+    lambda x: (x['series_complete_yes'].sum() / x['census2019'].sum()
+               ) * 100 if x['census2019'].sum() > 0 else 0
+).reset_index(name='series_complete_pop_pct')
 
 # State Abbreviation to FIPS mapping (including PR)
 state_abbr_to_fips = {
@@ -40,53 +73,64 @@ state_abbr_to_fips = {
 }
 
 # Add FIPS to state data
-state_agg['FIPS'] = state_agg['Recip_State'].map(state_abbr_to_fips)
-state_agg = state_agg.dropna(subset=['FIPS']) # Drop states without FIPS mapping (e.g. US, VI, GU if any)
+state_agg['fips'] = state_agg['recip_state'].map(state_abbr_to_fips)
+# Drop states without FIPS mapping (e.g. US, VI, GU if any)
+state_agg = state_agg.dropna(subset=['fips'])
 # state_agg['FIPS'] = state_agg['FIPS'].astype(int) # REMOVED to preserve leading zeros (e.g. '06')
 
 # Prepare JSON structure
 output_data = {
-    "years": sorted(df['Year'].unique().tolist()),
+    "years": sorted(df['year'].unique().tolist()),
     "counties": {},
     "states": {}
 }
 
 # Populate Counties
 for _, row in county_vax_by_year.iterrows():
-    fips = row['FIPS']
-    year = str(row['Year'])
+    fips = row['fips']
+    year = str(row['year'])
     if fips not in output_data["counties"]:
         output_data["counties"][fips] = {}
-    
-    rate = row['Series_Complete_Pop_Pct']
-    if pd.isna(rate):
-        rate = None
-        
-    completeness = row['Completeness_pct']
+
+    fully = row['series_complete_pop_pct']
+    if pd.isna(fully):
+        fully = None
+
+    dose1 = row['administered_dose1_pop_pct']
+    if pd.isna(dose1):
+        dose1 = None
+
+    booster = row['booster_doses_vax_pct']
+    if pd.isna(booster):
+        booster = None
+
+    completeness = row['completeness_pct']
     if pd.isna(completeness):
         completeness = None
 
     output_data["counties"][fips][year] = {
-        "rate": rate,
+        "fully_rate": fully,
+        "dose1_rate": dose1,
+        "booster_rate": booster,
         "completeness": completeness,
-        "name": row['Recip_County'],
-        "state": row['Recip_State']
+        "name": row['recip_county'],
+        "state": row['recip_state']
     }
 
 # Populate States
 for _, row in state_agg.iterrows():
-    fips = str(row['FIPS'])
-    year = str(row['Year'])
+    fips = str(row['fips'])
+    year = str(row['year'])
     if fips not in output_data["states"]:
         output_data["states"][fips] = {}
-        
-    rate = row['Series_Complete_Pop_Pct']
+
+    rate = row['series_complete_pop_pct']
     if pd.isna(rate):
         rate = None
 
     output_data["states"][fips][year] = {
         "rate": rate,
-        "abbr": row['Recip_State']
+        "abbr": row['recip_state']
     }
 
 # Save to JSON file

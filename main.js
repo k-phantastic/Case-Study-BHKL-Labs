@@ -10,6 +10,11 @@ import * as topojson from "https://cdn.jsdelivr.net/npm/topojson-client@3/+esm";
 //Import PolityicalAnalysis
 import { initPoliticalAnalysis, cleanupPoliticalAnalysis } from './political_analysis_viz.js';
 
+const metricLabels = {
+    fully_rate: "Fully Vaccinated",
+    dose1_rate: "First Dose",
+    booster_rate: "Booster Dose"
+};
 
 // Derive dimensions from the rendered SVG so the map fills its container.
 const svg = d3.select("#map");
@@ -29,6 +34,8 @@ let vaccinationData = {};
 let countyNames = {};
 let selectedYear = null;
 let availableYears = [];
+let metric = "fully_rate";  // default to fully vaccinated
+
 
 const g = svg.append("g");
 
@@ -62,11 +69,29 @@ d3.select("#reset-btn").on("click", resetMap);
 
 d3.select("#year-select").on("change", function () {
     selectedYear = this.value;
+
     if (currentState) {
         updateCountyColors();
-        updateInfoPanel();
+
+        // find selected counties
+        const selectedCounty = g.select(".county.selected");
+
+        if (!selectedCounty.empty()) {
+            // updated selected panel 
+            displayCountyDetails(selectedCounty.datum());
+        } else {
+            // If no county selected, show the state info
+            updateInfoPanel();
+        }
+    } else {
+        // show all state
+        g.selectAll(".state")
+            .transition()
+            .duration(500)
+            .attr("fill", d => getStateColor(d));
     }
 });
+
 
 // Load all data
 console.log("Starting data load...");
@@ -128,6 +153,27 @@ Promise.all([
             .attr("value", d => d)
             .text(d => d)
             .property("selected", d => d.toString() === selectedYear);
+        // Listen for metric change
+        d3.select("#metric-select").on("change", function () {
+            metric = this.value;
+
+            if (currentState) {
+                updateCountyColors();
+                const selectedCounty = g.select(".county.selected");
+
+                if (!selectedCounty.empty()) {
+                    displayCountyDetails(selectedCounty.datum());
+                } else {
+                    updateInfoPanel();
+                }
+            } else {
+                g.selectAll(".state")
+                    .transition()
+                    .duration(500)
+                    .attr("fill", d => getStateColor(d));
+            }
+        });
+
 
         // Draw initial map
         drawStates();
@@ -352,9 +398,11 @@ function showStateTooltip(event, d) {
         .style("display", "block")
         .html(`
             <strong>${name}</strong><br>
-            Fully Vaccinated: ${value !== null ? value.toFixed(1) + '%' : 'No Data'}<br>
+            ${metricLabels[metric]}: ${value !== null ? value.toFixed(1) + '%' : 'No Data'}<br>
             <span style="font-size: 11px; color: #ccc">Click to explore counties</span>
         `);
+
+
 }
 
 function moveTooltip(event) {
@@ -371,18 +419,36 @@ function hideTooltip() {
 function getVaccinationValue(fips, year) {
     const fipsStr = String(fips);
 
-    // Check counties
-    if (vaccinationData.counties && vaccinationData.counties[fipsStr] && vaccinationData.counties[fipsStr][year]) {
-        return vaccinationData.counties[fipsStr][year].rate;
+    // Check counties: must be 5-digit FIPS
+    // if (vaccinationData.counties && vaccinationData.counties[fipsStr] && vaccinationData.counties[fipsStr][year]) {
+    //     return vaccinationData.counties[fipsStr][year][metric];
+    // }
+    if (fipsStr.length === 5 &&
+        vaccinationData.counties &&
+        vaccinationData.counties[fipsStr] &&
+        vaccinationData.counties[fipsStr][year]
+    ) {
+        const c = vaccinationData.counties[fipsStr][year];
+
+        if (metric === "fully_rate") return c.fully_rate;
+        if (metric === "dose1_rate") return c.dose1_rate;
+        if (metric === "booster_rate") return c.booster_rate;
+
+        return null;
     }
 
-    // Check states
-    if (vaccinationData.states && vaccinationData.states[fipsStr] && vaccinationData.states[fipsStr][year]) {
+    // Check states: must be 2-digit FIPS
+    if (fipsStr.length === 2 &&
+        vaccinationData.states &&
+        vaccinationData.states[fipsStr] &&
+        vaccinationData.states[fipsStr][year]
+    ) {
         return vaccinationData.states[fipsStr][year].rate;
     }
 
     return null;
 }
+
 
 // Get completeness percentage
 function getCompletenessValue(fips, year) {
@@ -420,12 +486,17 @@ function displayCountyDetails(county) {
     const currentValue = getVaccinationValue(fips, selectedYear);
     const completeness = getCompletenessValue(fips, selectedYear);
 
+    let metricLabel = "";
+    if (metric === "fully_rate") metricLabel = "Fully Vaccinated Population";
+    if (metric === "dose1_rate") metricLabel = "First Dose Population";
+    if (metric === "booster_rate") metricLabel = "Booster Dose Population";
+
     let html = `
         <div class="county-details">
             <h3>${countyName}</h3>
-
+    
             <div class="metric">
-                <div class="metric-label">${selectedYear} - Fully Vaccinated Population</div>
+                <div class="metric-label">${selectedYear} - ${metricLabel}</div>
                 <div class="metric-value">${currentValue !== null ? currentValue.toFixed(1) + '%' : 'No Data'}</div>
                 ${completeness !== null ? `<div class="metric-subtext">Data completeness: ${completeness.toFixed(1)}%</div>` : ''}
             </div>
@@ -462,7 +533,7 @@ function showCountyTooltip(event, d) {
         .style("display", "block")
         .html(`
             <strong>${name}</strong><br>
-            Fully Vaccinated: ${value !== null ? value.toFixed(1) + '%' : 'No Data'}
+            ${metricLabels[metric]}: ${value !== null ? value.toFixed(1) + '%' : 'No Data'}
         `);
 }
 
@@ -588,7 +659,7 @@ async function renderBarRace(containerId) {
         .style("font-size", "14px")
         .style("fill", "#333")
         .text("Total COVID-19 Deaths");
-    
+
     // Scales
     const x = d3.scaleLinear().range([0, width]);
     const y = d3.scaleBand().range([0, height]).padding(0.2);
@@ -650,7 +721,7 @@ async function renderBarRace(containerId) {
             .attr("y", d => y(d.Combined_Key) + y.bandwidth() / 2);
 
         labels.exit().remove();
-    
+
         const valueLabels = svg.selectAll("text.value-label")
             .data(frameData, d => d.Combined_Key);
 
@@ -807,10 +878,10 @@ scroller
 
         // Initialize chart for this step
         initializeStepChart(index);
-       })
+    })
     .onStepExit(response => {
         const { index } = response;
-        
+
         // Clean up tooltips when leaving slide 3
         if (index === 3) {
             cleanupPoliticalAnalysis();
