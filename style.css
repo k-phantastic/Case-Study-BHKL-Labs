@@ -569,6 +569,19 @@ section {
     height: auto;
     display: block;
 }
+.step:not(.active) * {
+    pointer-events: none !important;
+}
+
+.step.active * {
+    pointer-events: auto !important;
+}
+
+.bar-tooltip,
+.scatter-tooltip {
+    z-index: 9999 !important;
+    pointer-events: auto !important;
+}
 
 
 
