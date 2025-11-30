@@ -29,6 +29,14 @@ header {
     border-bottom: 1px solid #e0e0e0;
 }
 
+.title-image {
+    max-width: 100%;
+    height: auto;
+    margin-top: 15px;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 /* New Nav Styles */
 #main-nav {
     margin-top: 15px;
