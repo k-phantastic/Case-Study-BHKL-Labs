@@ -2,5 +2,9 @@
 Thumbs.db
 .vscode/
 test.html
-data/data/COVID-19_Vaccinations_in_the_United_States,County_20251119.csv
 data/COVID-19_Vaccinations_in_the_United_States,County_20251119.csv
+data/generate_svg.py
+data/inspect_columns.py
+temp_viz.html
+data/aggregate_political_data.py
+data/political_data.json
