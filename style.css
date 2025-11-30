@@ -471,7 +471,6 @@ section {
     margin: 0 auto;
 }
 
-
 /* Bar Race Plot (Slide 2) */
 
 .slide2-buttons {
@@ -503,6 +502,17 @@ section {
     border-color: white;
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Look into debugging previously written AI CSS */
+#chart1 { 
+    max-width: none;
+    width: 100%;
+}
+
+.x-axis path, .x-axis line, .x-axis text {
+    stroke: #000000;
+    fill: #000000;
 }
 
 /* Progress indicator */
