@@ -687,6 +687,7 @@ async function renderBarRace(containerId) {
 
         y.domain(frameData.map(d => d.Combined_Key));
 
+        // Bars for each county
         const bars = svg.selectAll("rect")
             .data(frameData, d => d.Combined_Key);
 
@@ -705,7 +706,7 @@ async function renderBarRace(containerId) {
             .attr("width", d => x(d.running_total_deaths));
         bars.exit().remove();
 
-        // County Labels (Combined_Key)
+        // County Labels, left of bars (Combined_Key)
         const labels = svg.selectAll("text.bar-label")
             .data(frameData, d => d.Combined_Key);
 
@@ -724,6 +725,7 @@ async function renderBarRace(containerId) {
 
         labels.exit().remove();
 
+        // Value Labels, right of bars, showing running total deaths
         const valueLabels = svg.selectAll("text.value-label")
             .data(frameData, d => d.Combined_Key);
 
@@ -747,6 +749,7 @@ async function renderBarRace(containerId) {
 
         valueLabels.exit().remove();
 
+        // Display of current date for animation frames
         const dateFormat = d3.timeFormat("%B %d, %Y");
         const displayDate = dateFormat(new Date(dateKey));
         svg.selectAll(".date-label").remove();
