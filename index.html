@@ -72,6 +72,8 @@
                         Click on any state to view detailed county data.
                     </p>
 
+
+
                     <div class="controls">
                         <div class="control-group">
                             <label for="year-select">Select Year:</label>
@@ -87,6 +89,12 @@
                                 <option value="dose1_rate">First Dose</option>
                                 <option value="booster_rate">Booster Dose</option>
                             </select>
+                        </div>
+
+                        <div class="search-container" style="margin-top: 15px;">
+                            <label for="county-search">Search County:</label>
+                            <input type="text" id="county-search" placeholder="Type to search (e.g. San Diego)...">
+                            <div id="search-results" class="search-results"></div>
                         </div>
                     </div>
 

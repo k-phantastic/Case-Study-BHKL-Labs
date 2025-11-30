@@ -178,6 +178,10 @@ Promise.all([
         // Draw initial map
         drawStates();
 
+        // Build search index and setup listener
+        buildSearchIndex();
+        setupSearchListener();
+
         // Hide loading message
         d3.select(".loading").style("display", "none");
     })
@@ -186,6 +190,125 @@ Promise.all([
         d3.select(".loading").text(`Error loading data: ${err.message}`);
         d3.select(".loading").style("color", "red");
     });
+
+// Search functionality
+let searchIndex = [];
+
+function buildSearchIndex() {
+    if (!vaccinationData.counties) return;
+
+    // Iterate over all counties in the data
+    Object.keys(vaccinationData.counties).forEach(fips => {
+        // Get the most recent year's data to find the name
+        const years = Object.keys(vaccinationData.counties[fips]);
+        if (years.length > 0) {
+            const data = vaccinationData.counties[fips][years[0]];
+            searchIndex.push({
+                label: `${data.name}, ${data.state}`,
+                fips: fips,
+                stateFips: fips.substring(0, 2),
+                name: data.name,
+                state: data.state
+            });
+        }
+    });
+
+    // Sort alphabetically
+    searchIndex.sort((a, b) => a.label.localeCompare(b.label));
+}
+
+function setupSearchListener() {
+    const searchInput = document.getElementById('county-search');
+    const resultsContainer = document.getElementById('search-results');
+
+    if (!searchInput || !resultsContainer) return;
+
+    searchInput.addEventListener('input', function (e) {
+        const query = e.target.value.toLowerCase();
+
+        if (query.length < 2) {
+            resultsContainer.style.display = 'none';
+            return;
+        }
+
+        const matches = searchIndex.filter(item =>
+            item.label.toLowerCase().includes(query)
+        ).slice(0, 10); // Limit to 10 results
+
+        if (matches.length > 0) {
+            resultsContainer.innerHTML = matches.map(item => `
+                <div class="search-result-item" data-fips="${item.fips}">
+                    ${item.name} <span class="state-abbr">${item.state}</span>
+                </div>
+            `).join('');
+            resultsContainer.style.display = 'block';
+
+            // Add click listeners to results
+            document.querySelectorAll('.search-result-item').forEach(item => {
+                item.addEventListener('click', function () {
+                    const fips = this.getAttribute('data-fips');
+                    selectCountyFromSearch(fips);
+                    resultsContainer.style.display = 'none';
+                    searchInput.value = this.textContent.trim();
+                });
+            });
+        } else {
+            resultsContainer.style.display = 'none';
+        }
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function (e) {
+        if (!searchInput.contains(e.target) && !resultsContainer.contains(e.target)) {
+            resultsContainer.style.display = 'none';
+        }
+    });
+}
+
+function selectCountyFromSearch(fips) {
+    const countyItem = searchIndex.find(item => item.fips === fips);
+    if (!countyItem) return;
+
+    const stateFips = countyItem.stateFips;
+
+    // Find the state feature
+    const stateFeature = statesData.features.find(f => f.id === stateFips);
+
+    if (!stateFeature) return;
+
+    // If we are not in this state, zoom to it first
+    if (!currentState || currentState.id !== stateFips) {
+        // Trigger state click simulation
+        // We need to pass a mock event or handle it directly
+        // Let's call handleStateClick with a mock event
+        const mockEvent = { stopPropagation: () => { } };
+        handleStateClick(mockEvent, stateFeature);
+
+        // Wait for transition then select county
+        setTimeout(() => {
+            highlightCounty(fips);
+        }, 1000); // Wait for state zoom transition (750ms + buffer)
+    } else {
+        // Already in state, just highlight
+        highlightCounty(fips);
+    }
+}
+
+function highlightCounty(fips) {
+    // Find the county element
+    const countySelection = g.selectAll(".county").filter(d => d.id === fips);
+
+    if (!countySelection.empty()) {
+        // Remove previous selection
+        g.selectAll(".county").classed("selected", false);
+
+        // Highlight new selection
+        countySelection.classed("selected", true);
+
+        // Update info panel
+        displayCountyDetails(countySelection.datum());
+    }
+}
 
 // Draw US states
 function drawStates() {
