@@ -396,6 +396,42 @@ section {
     padding: 1rem;
 }
 
+/* =============== Progress indicator =============== */
+.progress-indicator {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 100;
+}
+
+.progress-dot {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.progress-dot.active {
+    background: white;
+    transform: scale(1.25);
+}
+
+.progress-dot:hover {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.step.active {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: all;
+    z-index: 10;
+}
+
 /* =============== Slide backgrounds =============== */
 .step[data-step="0"] {
     background: linear-gradient(135deg, #136eff 0%, #999999 100%);
@@ -436,7 +472,7 @@ section {
     padding: 1rem;
     display: block;
     width: 100%;
-    max-width: 750px;
+    /* max-width: 750px; */
     margin: 0 auto;
 }
 
@@ -468,7 +504,7 @@ section {
     }
 }
 
-/* =============== Title Navigation =============== */
+/*  Title Navigation  */
 #title-nav {
     display: flex;
     justify-content: center;
@@ -495,117 +531,7 @@ section {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* =============== Bar Race Plot (Slide 2) =============== */
-
-.slide2-buttons {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
-
-#barChartStartRace,
-#barChartStopRace,
-#barChartResetRace {
-    text-decoration: none;
-    color: white;
-    font-weight: 600;
-    padding: 10px 25px;
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    border-radius: 30px;
-    transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.1);
-    cursor: pointer;
-}
-
-#barChartStartRace:hover,
-#barChartStopRace:hover,
-#barChartResetRace:hover {
-    background: white;
-    color: #136eff;
-    border-color: white;
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-#chart1 {
-    max-width: none;
-    width: 100%;
-}
-
-.x-axis path,
-.x-axis line,
-.x-axis text {
-    stroke: #000000;
-    fill: #000000;
-}
-
-/* =============== Progress indicator =============== */
-.progress-indicator {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    z-index: 100;
-}
-
-.progress-dot {
-    width: 0.75rem;
-    height: 0.75rem;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.progress-dot.active {
-    background: white;
-    transform: scale(1.25);
-}
-
-.progress-dot:hover {
-    background: rgba(255, 255, 255, 0.6);
-}
-
-.step.active {
-    opacity: 1 !important;
-    visibility: visible !important;
-    pointer-events: all;
-    z-index: 10;
-}
-
-/* =============== Political Viz Styles (Slide 3) =============== */
-.political-viz-container {
-    max-width: 700px !important;
-    width: 100% !important;
-    margin: 0 auto !important;
-    padding: 15px !important;
-}
-
-.political-viz-container svg {
-    max-width: 100%;
-    height: auto;
-    display: block;
-}
-
-.step:not(.active) * {
-    pointer-events: none !important;
-}
-
-.step.active * {
-    pointer-events: auto !important;
-}
-
-.bar-tooltip,
-.scatter-tooltip {
-    z-index: 9999 !important;
-    pointer-events: auto !important;
-
-}
-
-/* Search Component Styles */
+/* =============== Slide 1 Plot =============== */
 .search-container {
     position: relative;
     margin-bottom: 20px;
@@ -675,4 +601,93 @@ section {
     color: #888;
     font-size: 12px;
     margin-left: 5px;
+}
+
+/* =============== Bar Race Plot (Slide 2) =============== */
+
+.slide2-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+#barChartStartRace,
+#barChartStopRace,
+#barChartResetRace {
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    padding: 10px 25px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+}
+
+#barChartStartRace:hover,
+#barChartStopRace:hover,
+#barChartResetRace:hover {
+    background: white;
+    color: #136eff;
+    border-color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+#chart1 {
+    max-width: none;
+    width: 100%;
+}
+
+.x-axis path,
+.x-axis line,
+.x-axis text {
+    stroke: #000000;
+    fill: #000000;
+}
+
+/* =============== Political Viz Styles (Slide 3) =============== */
+.political-viz-container {
+    max-width: 700px !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 15px !important;
+}
+
+.political-viz-container svg {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.step:not(.active) * {
+    pointer-events: none !important;
+}
+
+.step.active * {
+    pointer-events: auto !important;
+}
+
+.bar-tooltip,
+.scatter-tooltip {
+    z-index: 9999 !important;
+    pointer-events: auto !important;
+
+}
+
+/* .chart-container {
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    padding: 1rem;
+    display: block;
+    width: 100%;
+    /* max-width: 750px; 
+    margin: 0 auto;
+} */
+
+.chart-container:has(#chart3) {
+    max-width: 750px;
 }
