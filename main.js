@@ -675,7 +675,7 @@ async function loadKaggleData() {
     return data;
 }
 
-// Filter by State
+// Filter by State (function excludes territories)
 function filterByState(data, stateName) {
     return data
         .filter(d => d.iso3 == "USA")
@@ -794,39 +794,68 @@ async function renderBarRace(containerId) {
     let frameIndex = 0;
     let isRunning = false;
     const animationSpeed = 100; // milliseconds
+
+    // Function to update the frame for a given date "key"
     function updateFrame(dateKey) {
         const frameData = raceByDate.get(dateKey);
 
-        frameData.sort((a, b) => d3.descending(a.running_total_deaths, b.running_total_deaths));
+        frameData.sort((a, b) => d3.descending(a.running_total_deaths, b.running_total_deaths)); // Sort descending by death count
 
         x.domain([0, d3.max(frameData, d => d.running_total_deaths)]);
 
         svg.select(".x-axis")
             .transition()
             .duration(animationSpeed)
-            .call(d3.axisBottom(x).ticks(5).tickSizeOuter(0));
+            .call(d3.axisBottom(x).ticks(5).tickSizeOuter(0))
+            // Fix for AI-generated CSS..
+            // .selectAll("text")
+            // .style("fill", "#333") 
+            // .selectAll("line, path")
+            // .style("stroke", "#333");
 
         y.domain(frameData.map(d => d.Combined_Key));
 
-        const bars = svg.selectAll("rect")
+        // Bars for each county
+        const deathCountBars = svg.selectAll("rect.death-bar")
             .data(frameData, d => d.Combined_Key);
 
-        bars.enter()
+        deathCountBars.enter()
             .append("rect")
+            .attr("class", "death-bar") // to distinguish from other
             .attr("y", d => y(d.Combined_Key))
-            .attr("height", y.bandwidth())
+            .attr("height", y.bandwidth() / 2)
             .attr("x", 0)
             .attr("width", d => x(d.running_total_deaths))
             .attr("fill", d => color(d.Combined_Key))
-            .merge(bars)
+            .merge(deathCountBars)
             .transition()
             .duration(animationSpeed)   // Adjust duration for smoother animation
             .attr("y", d => y(d.Combined_Key))
             .attr("height", y.bandwidth())
             .attr("width", d => x(d.running_total_deaths));
-        bars.exit().remove();
+        deathCountBars.exit().remove();
 
-        // Labels
+        // Implementation attempt for confirmed cases
+        const confirmedCountBars = svg.selectAll("rect.confirmed-bar")
+            .data(frameData, d => d.Combined_Key);
+
+        confirmedCountBars.enter()
+            .append("rect")
+            .attr("class", "confirmed-bar") // to distinguish from other
+            .attr("y", d => y(d.Combined_Key) + y.bandwidth() / 4)
+            .attr("height", y.bandwidth() / 2)
+            .attr("x", 0)
+            .attr("width", d => x(d.running_total_confirmed) * 0.5) // scaled down for visibility
+            .attr("fill", d => d3.color(color(d.Combined_Key)).darker(0.5))
+            .merge(confirmedCountBars)
+            .transition()
+            .duration(animationSpeed)   // Adjust duration for smoother animation
+            .attr("y", d => y(d.Combined_Key) + y.bandwidth() / 2)
+            .attr("height", y.bandwidth() / 2)
+            .attr("width", d => x(d.running_total_confirmed) * 0.5);
+        confirmedCountBars.exit().remove();
+
+        // County Labels, left of bars (Combined_Key)
         const labels = svg.selectAll("text.bar-label")
             .data(frameData, d => d.Combined_Key);
 
@@ -845,6 +874,7 @@ async function renderBarRace(containerId) {
 
         labels.exit().remove();
 
+        // Value Labels, right of bars, showing running total deaths
         const valueLabels = svg.selectAll("text.value-label")
             .data(frameData, d => d.Combined_Key);
 
@@ -868,6 +898,7 @@ async function renderBarRace(containerId) {
 
         valueLabels.exit().remove();
 
+        // Display of current date for animation frames
         const dateFormat = d3.timeFormat("%B %d, %Y");
         const displayDate = dateFormat(new Date(dateKey));
         svg.selectAll(".date-label").remove();
