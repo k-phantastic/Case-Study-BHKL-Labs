@@ -10,7 +10,7 @@ export async function initPoliticalAnalysis(containerId) {
     
     // Layout configuration
     const width = 650;
-    const height = 200;  
+    const height = 160;  
     const margin = { top: 20, right: 50, bottom: 40, left: 55 };
     
     // Create main visualization container
@@ -24,10 +24,10 @@ export async function initPoliticalAnalysis(containerId) {
     // Summary Statistics
     const summaryDiv = vizContainer.append('div')
         .attr('class', 'summary-stats')
-        .style('margin-bottom', '10px')
+        .style('margin-bottom', '8px')
         .style('display', 'flex')
         .style('justify-content', 'space-around')
-        .style('gap', '10px');
+        .style('gap', '8px');
     
     // Blue states stat card
     summaryDiv.append('div')
@@ -35,7 +35,7 @@ export async function initPoliticalAnalysis(containerId) {
         .style('flex', '1')
         .style('background', 'linear-gradient(135deg, #2196F3 0%, #1976D2 100%)')
         .style('color', 'white')
-        .style('padding', '12px')
+        .style('padding', '10px')
         .style('border-radius', '8px')
         .style('text-align', 'center')
         .html(`
@@ -50,7 +50,7 @@ export async function initPoliticalAnalysis(containerId) {
         .style('flex', '1')
         .style('background', 'linear-gradient(135deg, #f44336 0%, #c62828 100%)')
         .style('color', 'white')
-        .style('padding', '12px')
+        .style('padding', '10px')
         .style('border-radius', '8px')
         .style('text-align', 'center')
         .html(`
@@ -65,7 +65,7 @@ export async function initPoliticalAnalysis(containerId) {
         .style('flex', '1')
         .style('background', 'linear-gradient(135deg, #9E9E9E 0%, #616161 100%)')
         .style('color', 'white')
-        .style('padding', '12px')
+        .style('padding', '10px')
         .style('border-radius', '8px')
         .style('text-align', 'center')
         .html(`
@@ -85,9 +85,9 @@ export async function initPoliticalAnalysis(containerId) {
     
     timeSeriesDiv.append('h3')
         .style('text-align', 'center')
-        .style('margin-bottom', '15px')
+        .style('margin-bottom', '10px')
         .style('color', '#333')
-        .style('font-size', '16px')
+        .style('font-size', '14px')
         .text('Vaccination Rates Over Time: Red vs Blue States');
     
     const timeSeriesSvg = timeSeriesDiv.append('svg')
@@ -204,13 +204,13 @@ export async function initPoliticalAnalysis(containerId) {
     // Urban/Rural Breakdown
     const urbanRuralDiv = vizContainer.append('div')
         .attr('class', 'urban-rural-chart')
-        .style('margin-bottom', '20px');
+        .style('margin-bottom', '15px');
     
     urbanRuralDiv.append('h3')
         .style('text-align', 'center')
-        .style('margin-bottom', '15px')
+        .style('margin-bottom', '10px')
         .style('color', '#333')
-        .style('font-size', '16px')
+        .style('font-size', '14px')
         .text('Urban vs Rural: Vaccination Rates by Political Lean');
     
     const urbanRuralSvg = urbanRuralDiv.append('svg')
@@ -319,9 +319,9 @@ export async function initPoliticalAnalysis(containerId) {
     
     scatterDiv.append('h3')
         .style('text-align', 'center')
-        .style('margin-bottom', '15px')
+        .style('margin-bottom', '10px')
         .style('color', '#333')
-        .style('font-size', '16px')
+        .style('font-size', '14px')
         .text('Political Margin vs Vaccination Rate (Latest Year)');
     
     const scatterSvg = scatterDiv.append('svg')
