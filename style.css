@@ -62,7 +62,7 @@ header {
     display: flex;
     flex-direction: row;
     width: 100%;
-    height: 72vh;
+    height: 75vh; 
     border-radius: 30px;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -80,8 +80,9 @@ header {
     padding: 25px;
     background: #ffffff;
     border-left: 2px solid #e0e0e0;
-    overflow-y: auto;
     box-shadow: -2px 0 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
 }
 
 #map-container svg {
@@ -388,11 +389,8 @@ section {
     color: white;
     max-width: 1200px;
     width: 100%;
-    overflow-y: auto;
-    max-height: 90vh;
     padding: 1rem;
 }
-
 /* Slide backgrounds */
 .step[data-step="0"] {
     background: linear-gradient(135deg, #136eff 0%, #999999 100%);
@@ -463,8 +461,6 @@ section {
     width: 100%;
     max-width: 750px;
     margin: 0 auto;
-    overflow-y: auto;
-    max-height: 80vh;
 }
 
 
@@ -570,7 +566,6 @@ section {
     width: 100% !important;
     margin: 0 auto !important;
     padding: 15px !important;
-    overflow: visible !important;
 }
 
 .political-viz-container svg {
@@ -591,4 +586,5 @@ section {
 .scatter-tooltip {
     z-index: 9999 !important;
     pointer-events: auto !important;
+
 }
