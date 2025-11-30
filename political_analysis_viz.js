@@ -10,8 +10,8 @@ export async function initPoliticalAnalysis(containerId) {
     
     // Layout configuration
     const width = 650;
-    const height = 250;  
-    const margin = { top: 40, right: 80, bottom: 50, left: 60 };
+    const height = 200;  
+    const margin = { top: 20, right: 50, bottom: 40, left: 55 };
     
     // Create main visualization container
     const vizContainer = container.append('div')
@@ -24,10 +24,10 @@ export async function initPoliticalAnalysis(containerId) {
     // Summary Statistics
     const summaryDiv = vizContainer.append('div')
         .attr('class', 'summary-stats')
-        .style('margin-bottom', '15px')
+        .style('margin-bottom', '10px')
         .style('display', 'flex')
         .style('justify-content', 'space-around')
-        .style('gap', '15px');
+        .style('gap', '10px');
     
     // Blue states stat card
     summaryDiv.append('div')
@@ -35,7 +35,7 @@ export async function initPoliticalAnalysis(containerId) {
         .style('flex', '1')
         .style('background', 'linear-gradient(135deg, #2196F3 0%, #1976D2 100%)')
         .style('color', 'white')
-        .style('padding', '15px')
+        .style('padding', '12px')
         .style('border-radius', '8px')
         .style('text-align', 'center')
         .html(`
@@ -50,7 +50,7 @@ export async function initPoliticalAnalysis(containerId) {
         .style('flex', '1')
         .style('background', 'linear-gradient(135deg, #f44336 0%, #c62828 100%)')
         .style('color', 'white')
-        .style('padding', '15px')
+        .style('padding', '12px')
         .style('border-radius', '8px')
         .style('text-align', 'center')
         .html(`
@@ -65,7 +65,7 @@ export async function initPoliticalAnalysis(containerId) {
         .style('flex', '1')
         .style('background', 'linear-gradient(135deg, #9E9E9E 0%, #616161 100%)')
         .style('color', 'white')
-        .style('padding', '15px')
+        .style('padding', '12px')
         .style('border-radius', '8px')
         .style('text-align', 'center')
         .html(`
