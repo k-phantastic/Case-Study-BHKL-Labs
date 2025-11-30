@@ -552,7 +552,7 @@ async function loadKaggleData() {
     return data;
 }
 
-// Filter by State
+// Filter by State (function excludes territories)
 function filterByState(data, stateName) {
     return data
         .filter(d => d.iso3 == "USA")
@@ -671,6 +671,8 @@ async function renderBarRace(containerId) {
     let frameIndex = 0;
     let isRunning = false;
     const animationSpeed = 100; // milliseconds
+
+    // Function to update the frame for a given date "key"
     function updateFrame(dateKey) {
         const frameData = raceByDate.get(dateKey);
 
@@ -703,7 +705,7 @@ async function renderBarRace(containerId) {
             .attr("width", d => x(d.running_total_deaths));
         bars.exit().remove();
 
-        // Labels
+        // County Labels (Combined_Key)
         const labels = svg.selectAll("text.bar-label")
             .data(frameData, d => d.Combined_Key);
 
