@@ -122,14 +122,21 @@ export async function initPoliticalAnalysis(containerId) {
         .attr('opacity', 0.1)
         .call(d3.axisLeft(yScale).tickSize(-chartWidth).tickFormat(''));
     
-    timeSeriesG.append('g')
+     timeSeriesG.append('g')
         .attr('transform', `translate(0,${chartHeight})`)
         .call(d3.axisBottom(xScale).tickFormat(d3.format('d')))
-        .style('font-size', '11px');
-    
+        .style('font-size', '11px')
+        .selectAll('text')
+        .style('fill', '#333');
+
     timeSeriesG.append('g')
         .call(d3.axisLeft(yScale).tickFormat(d => d + '%'))
-        .style('font-size', '11px');
+        .style('font-size', '11px')
+        .selectAll('text')
+        .style('fill', '#333');
+    timeSeriesG.selectAll('.domain, .tick line')
+        .style('stroke', '#666');
+
     
     timeSeriesG.append('text')
         .attr('transform', 'rotate(-90)')
@@ -188,6 +195,7 @@ export async function initPoliticalAnalysis(containerId) {
     legend.append('text')
         .attr('x', 35).attr('y', 4)
         .style('font-size', '12px')
+        .style('fill', '#333')
         .text('Red States');
     
     legend.append('line')
@@ -199,6 +207,7 @@ export async function initPoliticalAnalysis(containerId) {
     legend.append('text')
         .attr('x', 35).attr('y', 24)
         .style('font-size', '12px')
+        .style('fill', '#333')
         .text('Blue States');
     
     // Urban/Rural Breakdown
@@ -244,11 +253,18 @@ export async function initPoliticalAnalysis(containerId) {
     urbanRuralG.append('g')
         .attr('transform', `translate(0,${chartHeight})`)
         .call(d3.axisBottom(xUrbanScale))
-        .style('font-size', '11px');
-    
+        .style('font-size', '11px')
+        .selectAll('text')
+        .style('fill', '#333');
+
     urbanRuralG.append('g')
         .call(d3.axisLeft(yUrbanScale).tickFormat(d => d + '%'))
-        .style('font-size', '11px');
+        .style('font-size', '11px')
+        .selectAll('text')
+        .style('fill', '#333');
+    
+    urbanRuralG.selectAll('.domain, .tick line')
+        .style('stroke', '#666');
     
     urbanRuralG.append('text')
         .attr('transform', 'rotate(-90)')
@@ -362,11 +378,18 @@ export async function initPoliticalAnalysis(containerId) {
             if (d > 0) return `Trump +${d}`;
             return 'Even';
         }))
-        .style('font-size', '10px');
-    
+        .style('font-size', '10px')
+        .selectAll('text')
+        .style('fill', '#333');
+
     scatterG.append('g')
         .call(d3.axisLeft(yScatterScale).tickFormat(d => d + '%'))
-        .style('font-size', '11px');
+        .style('font-size', '11px')
+        .selectAll('text')
+        .style('fill', '#333');
+    
+    scatterG.selectAll('.domain, .tick line')
+        .style('stroke', '#666');
     
     scatterG.append('text')
         .attr('x', chartWidth / 2)
