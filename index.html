@@ -18,9 +18,9 @@
     <!-- Slide 0 - Title & Navigation -->
     <section class="step" data-step="0">
         <div class="slide-content">
-            <h1 class="main-title">BHKL Labs COVID-19 Study</h1>
-            <p class="subtitle">COVID-19 vaccination in the U.S. shows strong spatial and temporal patterns.
-            <br>Scroll to explore how states and counties differ across time.</p>
+            <h1 class="main-title">BHKL Labs: COVID-19 Study</h1>
+            <p class="subtitle">A visual story of COVID-19 vaccination and outcomes across the United States. 
+            <br>Vaccinations in the U.S. followed geographic, political, and as a result temporal patterns.</p>
             <img src ="https://www.un.org/sites/un2.un.org/files/field/image/1583952355.1997.jpg" alt="COVID-19 Virus" class="title-image">
             <nav id="title-nav">
                 <a href="index.html" class="nav-link">Home</a>
@@ -30,8 +30,8 @@
             </nav>
 
             <div style="margin-top: 2rem;">
-                <p>Debug Placeholder: 1:15pm</p>
-                <p>Data Sources:</p>
+                <p>Explore how differences in vaccine uptake shaped cases, deaths, and community outcomes from national trends to county-level impacts.</p>
+                <!-- <p>Data Sources:</p> -->
             </div>
 
             <div class="scroll-indicator" style="margin-top: 3rem;">
@@ -40,13 +40,35 @@
             </div>
         </div>
     </section>
-
-    <!-- Slide 1 - Map -->
+    
+    <!-- Slide 1 - Bar Chart Race -->
     <section class="step" data-step="1">
+        <div class="slide-content">
+            <h2 class="slide-title">No Vaccinations: Case and Death Count in 2020</h2>
+            <p class="slide-text">Select a state to view the rate of COVID-19's spread in the state's top 5 counties over time. 
+                <br> The data's date range is from January to July of 2020, as the pandemic initially unfolded.
+            </p>
+            <div class="bar-race-state-selector">
+                <label for="bar-race-state-select" style="margin-right: 10px; font-size: 16px;">Select State:</label>
+                <select id="bar-race-state-select" style="padding: 8px 15px; font-size: 14px; border-radius: 5px; border: 1px solid #ccc;"></select>
+            </div>
+            <div class="chart-container">
+                <div id="chart1"></div>
+            </div>
+            <div class="slide2-buttons">
+                <button id="barChartStartRace">▶︎</button>
+                <button id="barChartStopRace">| |</button>
+                <button id="barChartResetRace">⟲</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 2 - Map -->
+    <section class="step" data-step="2">
         <div class="slide-content" style="width: 100%; max-width: 1400px;">
-            <h2 class="slide-title">U.S. COVID-19 Vaccination Map (2020–2023)</h2>
+            <h2 class="slide-title">Explore U.S. COVID-19 Vaccination Rates (2020-2023)</h2>
             <p class="slide-text">Track how vaccination rates changed across states and counties.
-                Use filters to explore different years and dose types</p>
+                <br>Use the controls to compare different years, metrics, and dose types</p>
 
             <div id="layout">
                 <div id="map-container">
@@ -104,38 +126,14 @@
         </div>
     </section>
 
-    <!-- Slide 2 - Bar Chart Race -->
-    <section class="step" data-step="2">
-        <div class="slide-content">
-            <h2 class="slide-title">COVID-19 Inital Year Case and Death Count </h2>
-            <p class="slide-text">Select a state to view the rate of COVID-19 spread in the state's top 5 counties over time. 
-                <br> The data's date range is from January to July of 2020.
-            </p>
-            <div class="bar-race-state-selector">
-                <label for="bar-race-state-select" style="margin-right: 10px; font-size: 16px;">Select State:</label>
-                <select id="bar-race-state-select" style="padding: 8px 15px; font-size: 14px; border-radius: 5px; border: 1px solid #ccc;"></select>
-            </div>
-            <div class="chart-container">
-                <div id="chart1"></div>
-            </div>
-            <div class="slide2-buttons">
-                <button id="barChartStartRace">▶︎</button>
-                <button id="barChartStopRace">| |</button>
-                <button id="barChartResetRace">⟲</button>
-            </div>
-        </div>
-    </section>
-
-
-
-    <!-- Slide 3 -->
+        <!-- Slide 3 -->
     <section class="step" data-step="3">
         <div class="slide-content">
-            <h2 class="slide-title">Politics & Geography: The Vaccination Divide</h2>
-            <p class="slide-text">Did red vs blue really matter? A 12 percentage point gap explains the story</p>
-
-            <div class="chart-container">
-                <div id="chart3"></div>
+            <h2 class="slide-title">Vaccination Timeline and Key Events</h2>
+            <p class="slide-text">Examining the relationship between political milestones and vaccination uptake.</p>
+            <div class="chart-container" style="width: 100%; max-width: 1000px;">
+                <img src="additional_files/political_context_graph.svg" alt="Political Context Graph"
+                    style="width: 100%; height: auto;">
             </div>
         </div>
     </section>
@@ -143,14 +141,16 @@
     <!-- Slide 4 -->
     <section class="step" data-step="4">
         <div class="slide-content">
-            <h2 class="slide-title">Historical Political Context</h2>
-            <p class="slide-text">Vaccination progress in the context of major political events.</p>
-            <div class="chart-container" style="width: 100%; max-width: 1000px;">
-                <img src="additional_files/political_context_graph.svg" alt="Political Context Graph"
-                    style="width: 100%; height: auto;">
+            <h2 class="slide-title">Political Epidemiology: The Vaccination Divide</h2>
+            <p class="slide-text">A 12-point vaccination rate gap reveals how politics influenced public health in vaccine uptake.</p>
+
+            <div class="chart-container">
+                <div id="chart4"></div>
             </div>
         </div>
     </section>
+
+
 
     <!-- Progress indicator -->
     <div class="progress-indicator">

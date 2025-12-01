@@ -558,7 +558,7 @@ async function loadKaggleData() {
 async function loadStates() {
     const data = await loadKaggleData();
     const states = Array.from(new Set(data.map(d => d.Province_State))).sort();
-    console.log("Available States:", states);
+    // console.log("Available States:", states);
 
     const stateSelect = document.getElementById("bar-race-state-select");
     stateSelect.innerHTML = ""; // Clear existing
@@ -910,27 +910,27 @@ function initializeStepChart(stepIndex) {
             chartsInitialized[0] = true;
             break;
         case 1:
-            // Map slide - already initialized
+            renderBarRace('chart1');
             chartsInitialized[1] = true;
             break;
         case 2:
-            renderBarRace('chart1');
+            // Map slide - already initialized
             chartsInitialized[2] = true;
             break;
         case 3:
+            // Placeholder
+            chartsInitialized[3] = true;
+            break;
+        case 4:
             // Political analysis slide
-            initPoliticalAnalysis('chart3')
+            initPoliticalAnalysis('chart4')
                 .then(() => {
                     console.log('Political analysis initialized');
-                    chartsInitialized[3] = true;
+                    chartsInitialized[4] = true;
                 })
                 .catch(err => {
                     console.error('Error initializing political analysis:', err);
                 });
-            break;
-        case 4:
-            // Placeholder
-            chartsInitialized[4] = true;
             break;
         case 5:
             // Placeholder
