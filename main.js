@@ -53,13 +53,21 @@ const colorScale = d3.scaleSequential()
 
 // Create gradient for legend
 const legendGradient = d3.select("#legend-gradient");
-for (let i = 0; i <= 100; i++) {
+// Define 4 bins
+const bins = [
+    { range: "0–25%", color: "#d6eaff" },   // light
+    { range: "25–50%", color: "#8bbcff" },
+    { range: "50–75%", color: "#4b86ff" },
+    { range: "75–100%", color: "#1d3fff" }  // dark
+];
+
+// Add colored blocks
+bins.forEach(b => {
     legendGradient.append("div")
-        .style("width", "2px")
+        .style("flex", "1")
         .style("height", "20px")
-        .style("background-color", colorScale(i))
-        .style("display", "inline-block");
-}
+        .style("background-color", b.color);
+});
 
 // Tooltip
 const tooltip = d3.select("#tooltip");
@@ -274,6 +282,9 @@ function handleStateClick(event, d) {
 
     // Update info panel
     updateInfoPanel();
+
+    // After layout changed → recalibrate Scrollama
+    scroller.resize();
 }
 
 // Handle county click - show details
@@ -387,6 +398,8 @@ function resetMap() {
 
     // Reset info panel
     d3.select("#county-details-container").html("");
+
+    scroller.resize();
 }
 
 // Tooltip functions
@@ -724,11 +737,11 @@ async function renderBarRace(containerId) {
             .transition()
             .duration(animationSpeed)
             .call(d3.axisBottom(x).ticks(5).tickSizeOuter(0))
-            // Fix for AI-generated CSS..
-            // .selectAll("text")
-            // .style("fill", "#333") 
-            // .selectAll("line, path")
-            // .style("stroke", "#333");
+        // Fix for AI-generated CSS..
+        // .selectAll("text")
+        // .style("fill", "#333") 
+        // .selectAll("line, path")
+        // .style("stroke", "#333");
 
         y.domain(frameData.map(d => d.Combined_Key));
 
@@ -995,3 +1008,112 @@ document.querySelectorAll('.progress-dot').forEach((dot, index) => {
     });
 });
 
+// add search bar for map page
+let isZooming = false;
+
+document.getElementById("county-search").addEventListener("input", function () {
+    const query = this.value.trim().toLowerCase();
+    const resultsBox = document.getElementById("search-results");
+
+    if (!query) {
+        resultsBox.style.display = "none";
+        return;
+    }
+
+    // find all the counties that is searching
+    const matches = [];
+
+    for (const [fips, years] of Object.entries(vaccinationData.counties)) {
+        const yearData = years[selectedYear];
+        if (!yearData) continue;
+
+        if (yearData.name.toLowerCase().includes(query)) {
+            matches.push({
+                fips,
+                name: yearData.name,
+                state: yearData.state
+            });
+        }
+    }
+
+    if (matches.length === 0) {
+        resultsBox.innerHTML = `<div class="search-result-item">No results found</div>`;
+        resultsBox.style.display = "block";
+        return;
+    }
+
+    // show all the results
+    resultsBox.innerHTML = matches.map(m =>
+        `<div class="search-result-item" data-fips="${m.fips}">
+            ${m.name} (${m.state})
+        </div>`
+    ).join("");
+
+    resultsBox.style.display = "block";
+
+    // click on which county you are looking for and zoom
+    document.querySelectorAll(".search-result-item").forEach(item => {
+        item.onclick = () => {
+            const fips = item.dataset.fips;
+            resultsBox.style.display = "none";
+            zoomToCounty(fips);
+        };
+    });
+});
+
+async function zoomToCounty(fips) {
+    if (isZooming) return;
+    isZooming = true;
+
+    const county = countiesData.features.find(c => c.id === fips);
+    if (!county) {
+        isZooming = false;
+        return;
+    }
+
+    const stateFips = fips.slice(0, 2);
+    const state = statesData.features.find(
+        s => String(s.id).padStart(2, "0") === stateFips
+    );
+
+    g.interrupt();                  // stop pending transitions
+    g.attr("transform", "");        // reset zoom
+    g.selectAll(".county").remove();// clear old counties
+
+    // zoom into the state (just once)
+    await new Promise(resolve => {
+        handleStateClick({ stopPropagation: () => { } }, state);
+        setTimeout(resolve, 900);   // wait for state zoom + counties drawn
+    });
+
+    // highlight the searched county
+    let tries = 0;
+    const timer = setInterval(() => {
+        tries++;
+
+        const countyEl = g.selectAll(".county").filter(d => d.id === fips);
+
+        if (!countyEl.empty()) {
+            clearInterval(timer);
+
+            g.selectAll(".county").classed("selected", false);
+            countyEl.classed("selected", true);
+
+            displayCountyDetails(countyEl.datum());
+
+            d3.select("#reset-btn")
+                .style("display", "block")
+                .style("opacity", 1);
+
+            isZooming = false;
+
+            scroller.resize();
+        }
+
+        if (tries > 25) {
+            clearInterval(timer);
+            isZooming = false;
+
+        }
+    }, 100);
+}
