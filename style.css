@@ -636,6 +636,10 @@ section {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
+.bar-race-state-selector {
+    margin: 10px;  
+}
+
 #chart1 {
     max-width: none;
     width: 100%;
@@ -676,17 +680,6 @@ section {
     pointer-events: auto !important;
 
 }
-
-/* .chart-container {
-    background: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    padding: 1rem;
-    display: block;
-    width: 100%;
-    /* max-width: 750px; 
-    margin: 0 auto;
-} */
 
 .chart-container:has(#chart3) {
     max-width: 750px;

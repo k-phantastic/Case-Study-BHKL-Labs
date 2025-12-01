@@ -549,14 +549,34 @@ async function loadKaggleData() {
         confirmed: +row['Confirmed'],
         deaths: +row['Deaths'],
     }));
-    return data;
+    return data
+        .filter(d => d.iso3 == "USA")
+        .filter(d => d.Province_State != "Diamond Princess")
+        .filter(d => d.Province_State != "Grand Princess");
 }
+
+async function loadStates() {
+    const data = await loadKaggleData();
+    const states = Array.from(new Set(data.map(d => d.Province_State))).sort();
+    console.log("Available States:", states);
+
+    const stateSelect = document.getElementById("bar-race-state-select");
+    stateSelect.innerHTML = ""; // Clear existing
+    states.forEach(state => {
+        const option = document.createElement("option");
+        option.value = state;
+        option.text = state;
+        if (state === "California") {
+            option.selected = true;
+        }
+        stateSelect.appendChild(option);
+    });
+}
+loadStates();
 
 // Filter by State (function excludes territories)
 function filterByState(data, stateName) {
-    return data
-        .filter(d => d.iso3 == "USA")
-        .filter(d => d.Province_State == stateName);
+    return data.filter(d => d.Province_State == stateName);
 }
 
 // Compute running total for animation (python cumsum equivalent?) for both confirmed and deaths from COVID
@@ -604,10 +624,10 @@ let raceData = null;
 let raceDates = null;
 let raceByDate = null;
 
-async function prepareRaceData() {
+async function prepareRaceData(selectedState = "California") {
     try {
         let data = await loadKaggleData();
-        data = filterByState(data, "California");
+        data = filterByState(data, selectedState);
         data = runningTotals(data);
         const top5 = getTop5Counties(data);
         data = filterTop5(data, top5);
@@ -622,6 +642,25 @@ async function prepareRaceData() {
 // Start loading race data in background
 prepareRaceData();
 
+document.addEventListener("DOMContentLoaded", async () => {
+
+    await loadStates();
+
+    const stateSelect = document.getElementById("bar-race-state-select");
+    const defaultState = stateSelect.value;
+
+    await prepareRaceData(defaultState);
+
+    // Listen for changes
+    stateSelect.addEventListener("change", async () => {
+        const newState = stateSelect.value;
+        await prepareRaceData(newState);
+
+        frameIndex = 0;
+        updateFrame(raceDates[0]);   // rerender first frame for new state
+    });
+});
+
 async function renderBarRace(containerId) {
     // Wait for data if not ready
     if (!raceByDate) {
@@ -634,7 +673,7 @@ async function renderBarRace(containerId) {
 
     const container = document.getElementById(containerId);
     // Dimensions
-    const margin = { top: 50, right: 80, bottom: 80, left: 250 };
+    const margin = { top: 50, right: 150, bottom: 80, left: 250 };
     const width = 900 - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
 
@@ -658,7 +697,7 @@ async function renderBarRace(containerId) {
         .attr("text-anchor", "middle")
         .style("font-size", "14px")
         .style("fill", "#333")
-        .text("Total COVID-19 Deaths");
+        .text("Total COVID-19 Deaths and Cases (ordered by county's reported death count)");
 
     // Scales
     const x = d3.scaleLinear().range([0, width]);
@@ -704,7 +743,7 @@ async function renderBarRace(containerId) {
             .attr("height", y.bandwidth() / 2)
             .attr("x", 0)
             .attr("width", d => x(d.running_total_deaths))
-            .attr("fill", d => color(d.Combined_Key))
+            .attr("fill", d => d3.color(color(d.Combined_Key)).darker(0.5))
             .merge(deathCountBars)
             .transition()
             .duration(animationSpeed)   // Adjust duration for smoother animation
@@ -723,14 +762,14 @@ async function renderBarRace(containerId) {
             .attr("y", d => y(d.Combined_Key) + y.bandwidth() / 4)
             .attr("height", y.bandwidth() / 2)
             .attr("x", 0)
-            .attr("width", d => x(d.running_total_confirmed) * 0.5) // scaled down for visibility
-            .attr("fill", d => d3.color(color(d.Combined_Key)).darker(0.5))
+            .attr("width", d => x(d.running_total_confirmed)) // scaled down for visibility
+            .attr("fill", d => color(d.Combined_Key))
             .merge(confirmedCountBars)
             .transition()
             .duration(animationSpeed)   // Adjust duration for smoother animation
             .attr("y", d => y(d.Combined_Key) + y.bandwidth() / 2)
             .attr("height", y.bandwidth() / 2)
-            .attr("width", d => x(d.running_total_confirmed) * 0.5);
+            .attr("width", d => x(d.running_total_confirmed));
         confirmedCountBars.exit().remove();
 
         // County Labels, left of bars (Combined_Key)
@@ -752,29 +791,53 @@ async function renderBarRace(containerId) {
 
         labels.exit().remove();
 
-        // Value Labels, right of bars, showing running total deaths
-        const valueLabels = svg.selectAll("text.value-label")
+        // Death value Labels, right of bars, showing running total deaths
+        const deathValueLabels = svg.selectAll("text.death-value-label")
             .data(frameData, d => d.Combined_Key);
 
-        valueLabels.enter()
+        deathValueLabels.enter()
             .append("text")
-            .attr("class", "value-label")
-            .attr("y", d => y(d.Combined_Key) + y.bandwidth() / 2)
+            .attr("class", "death-value-label")
+            .attr("y", d => y(d.Combined_Key) + y.bandwidth() / 4)
             .attr("x", d => x(d.running_total_deaths) + 5)
             .attr("dy", "0.35em")
             .attr("text-anchor", "start")
             .style("font-size", "12px")
             .style("font-weight", "bold")
-            .style("fill", "#333")
-            .text(d => d3.format(",")(d.running_total_deaths))
-            .merge(valueLabels)
+            .style("fill", "#000000ff")
+            .text(d => `${d3.format(",")(d.running_total_deaths)} deaths`)
+            .merge(deathValueLabels)
             .transition()
             .duration(animationSpeed)
-            .attr("y", d => y(d.Combined_Key) + y.bandwidth() / 2)
+            .attr("y", d => y(d.Combined_Key) + y.bandwidth() / 4)
             .attr("x", d => x(d.running_total_deaths) + 5)
-            .text(d => d3.format(",")(d.running_total_deaths));
+            .text(d => `${d3.format(",")(d.running_total_deaths)} deaths`);
 
-        valueLabels.exit().remove();
+        deathValueLabels.exit().remove();
+
+        // Case value Labels, right of bars, showing running total cases
+        const caseValueLabels = svg.selectAll("text.case-value-label")
+            .data(frameData, d => d.Combined_Key);
+
+        caseValueLabels.enter()
+            .append("text")
+            .attr("class", "case-value-label")
+            .attr("y", d => y(d.Combined_Key) + y.bandwidth() * 3 / 4)
+            .attr("x", d => x(d.running_total_confirmed) + 5)
+            .attr("dy", "0.35em")
+            .attr("text-anchor", "start")
+            .style("font-size", "12px")
+            .style("font-weight", "bold")
+            .style("fill", "#000000ff")
+            .text(d => `${d3.format(",")(d.running_total_confirmed)} cases`)
+            .merge(caseValueLabels)
+            .transition()
+            .duration(animationSpeed)
+            .attr("y", d => y(d.Combined_Key) + y.bandwidth() * 3 / 4)
+            .attr("x", d => x(d.running_total_confirmed) + 5)
+            .text(d => `${d3.format(",")(d.running_total_confirmed)} cases`);
+
+        caseValueLabels.exit().remove();
 
         // Display of current date for animation frames
         const dateFormat = d3.timeFormat("%B %d, %Y");
@@ -831,8 +894,6 @@ async function renderBarRace(containerId) {
 
     animate();
 }
-
-
 
 // Scrollytelling 
 const scroller = scrollama();
