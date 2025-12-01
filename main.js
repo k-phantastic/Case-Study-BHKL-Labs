@@ -722,7 +722,7 @@ async function renderBarRace(containerId) {
     // Initial date/frame
     let frameIndex = 0;
     let isRunning = false;
-    const animationSpeed = 100; // milliseconds
+    const animationSpeed = 50; // milliseconds
 
     // Function to update the frame for a given date "key"
     function updateFrame(dateKey) {
