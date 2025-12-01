@@ -681,6 +681,6 @@ section {
 
 }
 
-.chart-container:has(#chart3) {
+.chart-container:has(#chart4) {
     max-width: 750px;
 }
